@@ -18,7 +18,7 @@ bus.on("todo.create",function( rawTodo){
   Promise.waterfall([
     todos.insert( todo ),
     todos.commit(),
-    todos.save()
+    todos.push()
   ])
 })
 

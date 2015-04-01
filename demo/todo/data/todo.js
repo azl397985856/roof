@@ -6,13 +6,13 @@ var Todos = Nodes.derive( todoDef )
 var todos = new Todos()
 
 //get the initial data
-//todos.fetch("MATCH (todo)-[ASIGN_TO]->(user {id:1})")
+//todos.fetch("MATCH (todo)-[ASSIGNED_TO]->(user {id:1})")
 
 todos.fetch({
   hasRelation : {
     direction : "advance",
     props : {
-      type : "ASIGN_TO"
+      type : "ASSIGNED_TO"
     },
     target : {
       label : "User",
