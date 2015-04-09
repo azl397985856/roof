@@ -9,19 +9,18 @@ describe("nodes basic test",function(){
 
   var remoteUser = new UserNode()
 
-  remoteUser.pullOne({id:1})
+  remoteUser.pull({id:1})
 
-  var userData = {}
-  var anotherUserData = {}
+  var userData = {id:2}
+  var anotherUserData = {id:3}
 
+  //use UserNode as facade by passing initial data to it
   var user = new UserNode(userData)
   var anotherUser = new UserNode(anotherUserData)
 
 
   //build relation to another user
-  user.relateTo( anotherUser ).as("friend",{
-    knewSince:1988
-  }).commit()
+  user.relateTo( anotherUser, { friend : {knewSice:1988}} ).commit()
 
   //save changes to server
   //how to transfer data changes depend on `dct`

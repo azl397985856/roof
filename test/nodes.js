@@ -11,6 +11,14 @@ var UserNodes = Nodes.derive(userDef).use(dct)
 
 describe("nodes basic test",function(){
 
+  //use UserNodes basic methods
+  UserNodes.insert({age:">5"}).then(function(){})
+  UserNodes.update({}).then(function(){})
+  UserNodes.remove({age:">5"}).then(function(){})
+  UserNodes.pull({age:">5"}).then(function(){})
+
+
+  //get a collection instance of nodes
   var users = new UserNodes()
 
   //fetch data from server
@@ -47,5 +55,8 @@ describe("nodes basic test",function(){
   users.find(function(obj){
     return obj.name === "A"
   })
+
+
+
 
 })

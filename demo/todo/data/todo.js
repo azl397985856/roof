@@ -23,7 +23,9 @@ todos.fetch({
   }
 })
 
+http://localhost/todo?hasRelation={user:1}
+
 //sub from server
-todos.sub(2000)
+//todos.sub(2000)
 
 module.exports = todos
