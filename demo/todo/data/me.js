@@ -1,9 +1,10 @@
-var roof = require("roof")
-var Node = roof.Node
+var Node = require("../../src/node")
 
 var userDef = require("../../common/model/user")
-var user = Node.derive(userDef)
-var me = new User
-me.fetch({"resource":"me"})
+var User = Node( userDef )
+var me = User.new()
+
+
+me.pull("me")
 
 module.exports = me

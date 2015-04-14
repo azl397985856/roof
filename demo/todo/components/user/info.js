@@ -1,21 +1,15 @@
 var React = require("react")
-
-var List = require("./list")
-var Input= require("./input")
-
-var data = require("../../data")
-
+var data = require("../data")
 
 var Index = React.createClass({
   mixins : [data.mixin],
   cursors : {
-    todos : ['todos']
+    me : ['me']
   },
-  render() {
+  render : function() {
     return (
       <div>
-        <Input />
-        <List />
+        <div>name : {this.cursors.me.get("name")}</div>
       </div>
     )
   }
