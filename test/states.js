@@ -1,6 +1,6 @@
 var States = require("../src/states")
 var assert = require("assert")
-
+var async = require("async")
 
 var NodeActionTense = {
   'push':['unpushed','pushing','pushed'],
@@ -51,5 +51,53 @@ describe("state test", function(){
     assert.equal( states.is(["valid","pushed"]), true)
     assert.equal( states.is(["valid","pushed"],"committed"), false)
     assert.equal( states.is(["valid","pushed"],"pushing"), true)
+  })
+
+  it("state change event test",function(done){
+    async.parallel([
+      function( cb ){
+        states.on("change", function( val, oldVal){
+          assert.equal( oldVal, "unpushed")
+          assert.equal( val, 'pushing')
+          console.log("change")
+          cb()
+        })
+      },
+      function( cb ){
+        states.on("pushing", function(val, oldVal){
+          assert.equal( oldVal, "unpushed")
+          assert.equal( val, 'pushing')
+          console.log("pushing")
+
+          cb()
+        })
+      }
+    ], function(){
+      done()
+    });
+
+    states.start("push")
+  })
+
+  it("naive state event test", function(){
+    async.parallel([
+      function( cb ){
+        states.on("change", function( val, oldVal){
+          assert.equal( oldVal, null)
+          assert.equal( val, 'valid')
+          cb()
+        })
+      },
+      function( cb ){
+        states.on("pushing", function(val, oldVal){
+          assert.equal( oldVal, null)
+          assert.equal( val, 'valid')
+          cb()
+        })
+      }
+    ], function(){
+      done()
+    });
+    states.activate("valid")
   })
 })

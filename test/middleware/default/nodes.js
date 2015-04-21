@@ -19,6 +19,17 @@ module.exports = {
     }
   },
   pull : function(){
+    fn : function fakePull(){
+      var that = this
 
+      var data = [{id:1,name:"miya"},{id:2,name:"walker"}]
+
+      return new Promise(function( resolve ){
+        setTimeout(function(){
+          that.fill( data )
+          resolve(data)
+        },100)
+      })
+    }
   }
 }

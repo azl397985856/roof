@@ -2,14 +2,15 @@ var Promise = require("bluebird")
 var _ = require("lodash")
 var Frames = require("./frames")
 var States = require("./states")
+var util = require("./util")
 
 
 //global values
 var NodeActionTense = {
   'push':['unpushed','pushing','pushed'],
   'pull':['unpulled','pulling','pulled'],
-  'set':['unset','setting','set'],
   'verify':['unverified','verifying','verified'],
+  'set':['unset','setting','set'],
   'commit':['uncommitted','committing','committed'],
   'rollback':['unrollbacked','rollbacking','rollbacked'],
   'replace' : ['unreplaced','replacing','replaced']
@@ -30,84 +31,12 @@ SubNode.prototype.combine = function( combine ){
   this.options.combine = combine
 }
 
-SubNode.prototype.new = function( options ){
-  return new NodeInstance(this.def, _.defaults( options || {}, this.options) )
+SubNode.prototype.new = function( data , options ){
+  var ins = new NodeInstance(this.def, _.defaults( options || {}, this.options) )
+  if( data ) ins.fill( data )
+  return ins
 }
 
-
-
-
-function decorateWithState (prototype, action){
-  var rawAction = prototype[action]
-  prototype[action] = function(){
-    var that = this
-    var argv = Array.prototype.slice.call(arguments)
-    that.states.start(action)
-    //don't user Promise.resolve to deal with none Promise result
-    //cause the callback invoke in next tick.
-    var res = rawAction.apply( that, argv )
-    if( res && _.isFunction(res.then) ){
-      return res.then(function(){
-        that.states.end(action)
-      },function(){
-        that.states.end(action)
-      })
-    }else{
-      that.states.end(action)
-    }
-  }
-}
-
-function decorateWithMiddleware( prototype, action ){
-  var rawAction = prototype[action]
-  prototype[action] = function(){
-    var that = this
-    var argv = Array.prototype.slice.call(arguments)
-
-
-    if( that.middlewareActions && that.middlewareActions[action] ){
-
-      return Promise.each(["before","fn","after"],function( fnName){
-        if( !that.middlewareActions[action][fnName].length ) return true
-        var fns = that.middlewareActions[action][fnName]
-        //important
-        if( fnName === "fn" ) fns.push( rawAction )
-        var lastResult
-        return Promise.each( fns, function( fn ){
-          lastResult = fn.apply( that, [lastResult].concat(argv) )
-          return lastResult
-        })
-      })
-    }else{
-      //console.log("no middleware loaded for action", action)
-      return rawAction.apply( that, arguments)
-    }
-  }
-}
-
-function loadMiddlewareActions( middlewares ){
-  var middlewareActions = {}
-  var keys =["before","fn","after"]
-  middlewares.forEach(function( middleware){
-    _.forEach( middleware, function( actionDef, action){
-      if( !middlewareActions[action] ){
-        middlewareActions[action] = _.zipObject(keys, keys.map(function(){return []}))
-      }
-
-      if( _.isFunction(actionDef )){
-        middlewareActions[action].fn.push( actionDef )
-      }else if( _.isObject( actionDef)){
-        keys.forEach(function(key){
-          _.isFunction(actionDef[key])  && middlewareActions[action][key].push( actionDef[key] )
-        })
-      }else{
-        console.warn("unrecognized middleware action definition:",actionDef)
-      }
-    })
-  })
-
-  return middlewareActions
-}
 
 function NodeInstance( def, options ){
   var that = this
@@ -123,7 +52,7 @@ function NodeInstance( def, options ){
     naive : {
       "valid" : ["valid","invalid"],
       "clean" : ["clean","dirty"] //whether data is changed since last update from server
-    }
+    },
   })
 
   if( that.options.combine ){
@@ -135,11 +64,13 @@ function NodeInstance( def, options ){
     if( !_.isArray( that.options.middleware ) ){
       that.options.middleware = [that.options.middleware]
     }
-    that.middlewareActions = loadMiddlewareActions(that.options.middleware)
+    that.middlewareActions = util.loadMiddlewareActions(that.options.middleware)
   }
 }
 
-
+NodeInstance.prototype.on = function(){
+  this.states.on.apply( this.states, Array.prototype.slice.call(arguments) )
+}
 
 NodeInstance.prototype.set =function( path, value){
   /*
@@ -148,12 +79,15 @@ NodeInstance.prototype.set =function( path, value){
     这样有改动时既可以和最新的这个快照对比，看看是不是clean的，
     而不是像现在这样只要有改动就设置成dirty
    */
+
+  //TODO 支持通过EJSON的方式来更新字段
+
   this.states.deactivate("clean")
   return this.data.set(path, value)
 }
 
-NodeInstance.prototype.replace =function( obj ){
-  return this.data.replace( obj )
+NodeInstance.prototype.fill =function( obj ){
+  return this.data.fill( obj )
 }
 
 NodeInstance.prototype.commit =function( commitName ){
@@ -173,36 +107,53 @@ NodeInstance.prototype.get = function(path){
   return this.data.get(path)
 }
 
-NodeInstance.prototype.toPlainObject = function(path){
-  return this.data.toPlainObject()
+NodeInstance.prototype.toObject = function(path){
+  //TODO
+  return this.data.toObject()
 }
+
+NodeInstance.prototype.clone = function(){
+  //TODO
+}
+
+
 
 NodeInstance.prototype.is =function(){
   return this.states.is.apply(this.states, Array.prototype.slice.call(arguments))
-
 }
 
 
-
-NodeInstance.prototype.pull =
-  NodeInstance.prototype.push =
-    NodeInstance.prototype.verify = function( promise ){
+NodeInstance.prototype.pull = NodeInstance.prototype.push = function rawUpdate( promise ){
   //this function will be called after user's handler
   var that = this
   return promise.then(function(){
-    that.states.activate("valid")
+    that.states.activate("clean")
+    that.states.reset("valid")
+    that.states.reset("verify")
+    that.states.reset("pull")
+    that.states.reset("push")
   }, function(){
+    that.states.deactivate("clean")
+    that.states.deactivate("valid")
+  })
+}
+
+NodeInstance.prototype.verify = function( promise ) {
+  //this function will be called after user's handler
+  var that = this
+  return promise.then(function () {
+    that.states.activate("valid")
+  }, function () {
     that.states.deactivate("valid")
   })
 }
 
 
 
-
 //this is important
 NodeActions.forEach(function( action){
-  decorateWithMiddleware( NodeInstance.prototype, action)
-  decorateWithState( NodeInstance.prototype, action)
+  util.decorateWithMiddleware( NodeInstance.prototype, action)
+  util.decorateWithState( NodeInstance.prototype, action)
 })
 
 
@@ -232,8 +183,6 @@ function CombinedArgv( combine, argv ){
   that.combine = combine
   that.length = argv.length
 }
-
-
 
 
 module.exports = Node

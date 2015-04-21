@@ -28,7 +28,7 @@ Frames.prototype.set = function( path , value ){
   }
 }
 
-Frames.prototype.replace = function( obj ){
+Frames.prototype.fill = function( obj ){
   this.data = _.cloneDeep(obj)
 }
 
@@ -36,7 +36,7 @@ Frames.prototype.get = function( path ){
   return getRef( this.data, path)
 }
 
-Frames.prototype.toPlainObject = function(){
+Frames.prototype.toObject = function(){
   return _.cloneDeep( this.data )
 }
 

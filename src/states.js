@@ -1,4 +1,10 @@
+/**
+ * @see https://docs.google.com/document/d/1VDborHDR0f5a_LnTHUoQlGxWHy5M7FcTWDy_zmYYVMo/edit?usp=sharing
+ */
+
 var _ = require("lodash")
+var util = require("util");
+var events = require("events");
 
 var ActionStates =  ["initial", "started", "ended"]
 
@@ -28,11 +34,28 @@ function States( def ){
       return null
     })
   )
+
+  events.EventEmitter.call(this);
+}
+
+util.inherits(States, events.EventEmitter);
+
+States.prototype.set = function( name, value){
+  var lastValue = this.states[name]
+  this.states[name] = value
+
+  var lastReadable = this.def.tenses[name] ? this.def.tenses[name][ActionStates.indexOf(lastValue)] : lastValue
+  var thisReadable = this.def.tenses[name] ? this.def.tenses[name][ActionStates.indexOf(value)] : value
+
+  //console.log( ActionStates.indexOf(lastValue), lastValue)
+
+  this.emit("change", thisReadable, lastReadable )
+  this.emit( thisReadable, thisReadable, lastReadable )
 }
 
 States.prototype.changeActionState = function(action, stateIndex){
   if( !this.def.tenses[action] ) throw new Error("there is no state for action "+action)
-  this.states[action] = ActionStates[stateIndex]
+  this.set(action, ActionStates[stateIndex])
 }
 
 States.prototype.start = function(action){
@@ -45,7 +68,7 @@ States.prototype.end = function( action ){
 
 States.prototype.reset = function( actionOrState ){
   if( this.def.naive[actionOrState] ){
-    this.def.naive[state] = null
+    this.set(actionOrState,  null)
   }else{
     this.changeActionState(actionOrState,0)
   }
@@ -54,12 +77,12 @@ States.prototype.reset = function( actionOrState ){
 
 States.prototype.activate = function( state ){
   if( !this.def.naive[state] ) throw new Error("there is no naive state "+ state)
-  this.states[state] = this.def.naive[state][0]
+  this.set(state, this.def.naive[state][0])
 }
 
 States.prototype.deactivate = function( state ) {
   if( !this.def.naive[state] ) throw new Error("there is no naive state "+ state)
-  this.states[state] = this.def.naive[state][1]
+  this.set(state, this.def.naive[state][1])
 }
 
 States.prototype.is = function( state ){

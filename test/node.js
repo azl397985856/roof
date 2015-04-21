@@ -1,7 +1,8 @@
 var assert = require("assert")
 var _ = require("lodash")
 var Node = require("../src/node")
-var defaultMiddleWare = require("./middleware/default")
+var defaultMiddleWare = require("./middleware/default/node")
+var async = require("async")
 
 var userDef = require("./data/user")
 var User = Node( userDef, {middleware:defaultMiddleWare} )
@@ -108,10 +109,13 @@ describe("async state test", function(){
     disel.commit()
     assert.equal( disel.is("committed"), true )
     disel.push().then(function(){
-      console.log( arguments)
       assert.notEqual( disel.get("id"), undefined )
       assert.equal( disel.is("pushed"), true )
-      assert.equal( disel.is("valid"), true )
+      assert.equal( disel.is("clean"), true )
+      assert.equal( disel.is("valid"), false)
+      assert.equal( disel.is("invalid"), false)
+      assert.equal( disel.is("pulled"), false)
+      assert.equal( disel.is("verified"), false)
       done()
     })
 
@@ -148,6 +152,30 @@ describe("combine action test", function(){
 
 
 describe("state event test", function(){
+
+  it("state change should fire event", function(done){
+    var miya = User.new()
+    async.parallel([
+      function( cb ){
+        miya.on("set", function( val, oldVal){
+          assert.equal( val, 'set')
+          assert.equal( oldVal, 'setting')
+          cb()
+        })
+      },
+      function( cb ){
+        miya.on("setting", function( val, oldVal){
+          assert.equal( val, 'setting')
+          assert.equal( oldVal, 'unset')
+          cb()
+        })
+      }
+    ], function(){
+      done()
+    });
+
+    miya.set("name","miya")
+  })
 
 })
 
