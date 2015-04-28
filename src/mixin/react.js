@@ -1,0 +1,71 @@
+var _ = require("lodash")
+
+
+function getRef( obj, name ){
+  var ns = !_.isArray(name) ? name.split('.') : name,
+    ref = obj,
+    currentName
+
+  while( currentName = ns.shift() ){
+    if(_.isObject(ref) && ref[currentName]){
+      ref = ref[currentName]
+    }else{
+      ref = undefined
+      break;
+    }
+  }
+
+  return ref
+}
+
+function getStateProxy( randomKey ){
+  var proxyState =  {}
+  proxyState[randomKey] = (new Date()).getTime()
+  return proxyState
+}
+
+function roofDataMixin( data, def ){
+  def = _.defaults(def,{
+    attach : "cursors",
+    cursors : {}
+  })
+  var randomKey = (new Date()).getTime()
+  var mixinInstance = {}
+  var updater
+
+
+  function updateComponentFromDataChange(randomKey){
+    this.setState(getStateProxy(randomKey))
+  }
+
+  mixinInstance[def.attach] = _.mapValue( def.cursors, function( name){
+    return getRef( data, name )
+  })
+
+  mixinInstance.getInitialState = function(){
+    return getStateProxy(randomKey)
+  }
+
+  mixinInstance.componentDidMount = function(){
+    var that = this
+    updater = updateComponentFromDataChange.bind(that,randomKey)
+
+    _.forEach( this[def.attach], function( obj ){
+      if( _.isFunction(obj.on) ){
+        obj.on("change",updater)
+      }
+    })
+  }
+
+  mixinInstance.componentWillUnmount = function(){
+    _.forEach( this[def.attach], function( obj ){
+      if( _.isFunction(obj.on) ){
+        obj.off("change",updater)
+      }
+    })
+  }
+
+  return mixinInstance
+}
+
+module.exports = roofDataMixin

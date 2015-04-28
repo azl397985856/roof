@@ -25,8 +25,6 @@ describe("nodes facade methods test",function(){
       done()
     })
   })
-
-
 })
 
 
@@ -49,8 +47,63 @@ describe("states test", function(){
     var user = users.findOne({name:userData.name})
     user.push()
     assert.equal( user.is("pushing"), true)
+    assert.equal( users.is("pushing"), false)
+    assert.equal( users.isAny("pushing"), true)
   })
 })
+
+describe("events test", function(){
+  it("state change should fire event", function(done){
+    var users = UserNodes.new()
+    async.parallel([
+      function( cb ){
+        users.on("pushing", function( val, oldVal){
+          assert.equal( val, 'pushing')
+          assert.equal( oldVal, 'unpushed')
+          cb()
+        })
+      },
+      function( cb ){
+        users.on("pushed", function( val, oldVal){
+          assert.equal( val, 'pushed')
+          assert.equal( oldVal, 'pushing')
+          cb()
+        })
+      }
+    ], function(){
+      done()
+    });
+
+    users.push()
+  })
+
+  it("sub object event should propagate", function(done){
+    var users = UserNodes.new()
+    var user = User.new()
+    users.insert( user )
+    async.parallel([
+      function( cb ){
+        users.onAny("pushing", function( val, oldVal){
+          assert.equal( val, 'pushing')
+          assert.equal( oldVal, 'unpushed')
+          cb()
+        })
+      },
+      function( cb ){
+        users.onAny("pushed", function( val, oldVal){
+          assert.equal( val, 'pushed')
+          assert.equal( oldVal, 'pushing')
+          cb()
+        })
+      }
+    ], function(){
+      done()
+    });
+
+    user.push()
+  })
+})
+
 //
 //describe("commit and rollback test", function(){
 ////commit changes
@@ -69,9 +122,7 @@ describe("states test", function(){
 //})
 //
 //
-//describe("events test", function(){
-//
-//})
+
 //
 //
 //describe("util method test", function(){

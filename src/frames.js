@@ -41,12 +41,19 @@ Frames.prototype.toObject = function(){
 }
 
 Frames.prototype.commit = function( commitName ){
+  commitName = commitName || this.historyNames.length
+
+  if( this.historyNames.indexOf( commitName) ){
+    throw new Error("commit name already exists: "+ commitName)
+  }
+
   this.historyValues.push( _.cloneDeep( this.data ) )
-  this.historyNames.push( commitName || this.historyNames.length )
+  this.historyNames.push( commitName )
   if( this.historyNames.length > this.options.frames ){
     this.historyNames.unshift()
     this.historyValues.unshift()
   }
+  return true
 }
 
 Frames.prototype.rollback = function( commitName ){

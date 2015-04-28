@@ -72,6 +72,10 @@ NodeInstance.prototype.on = function(){
   this.states.on.apply( this.states, Array.prototype.slice.call(arguments) )
 }
 
+NodeInstance.prototype.off = function(){
+  this.states.removeListener.apply( this.states, Array.prototype.slice.call(arguments) )
+}
+
 NodeInstance.prototype.set =function( path, value){
   /*
     TODO
@@ -94,13 +98,19 @@ NodeInstance.prototype.commit =function( commitName ){
   if( commitName instanceof CombinedArgv ){
     commitName = undefined
   }
-  this.data.commit( commitName)
-  this.states.reset("set")
+  var result = this.data.commit( commitName)
+  if( result ){
+    this.states.reset("set")
+  }
+  return result
 }
 
 NodeInstance.prototype.rollback=function( commitName ){
-  this.data.rollback(commitName)
-  this.states.reset("set")
+  var result = this.data.rollback(commitName)
+  if( result ){
+    this.states.reset("set")
+  }
+  return result
 }
 
 NodeInstance.prototype.get = function(path){

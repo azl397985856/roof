@@ -9,9 +9,11 @@ var NodesActionTense = {
   'push':['unpushed','pushing','pushed'],
   'pull':['unpulled','pulling','pulled'],
   'verify':['unverified','verifying','verified'],
+
   'set':['unset','setting','set'],
   'commit':['uncommitted','committing','committed'],
   'rollback':['unrollbacked','rollbacking','rollbacked'],
+
   'fill' : ['unfilled','filling','filled'],
   'insert' : ['uninserted','inserting','inserted'],
   'update' : ['unupdated','updating','updated'],
@@ -65,14 +67,24 @@ function NodesInstance( factory, options ){
   this.updated = false
   this.states = {}
   this.data = []
-
+  this.nodeListeners = {}
 
   that.states = new States({
     tenses:NodesActionTense,
-    naive : {
-      "valid" : ["valid","invalid"],
-      "clean" : ["clean","dirty"] //whether data is changed since last update from server
-    },
+    complex : {
+      "valid" : function(){
+
+      }.bind(that),
+      "invalid" : function(){
+
+      }.bind(that),
+      "clean" : function(){
+
+      }.bind(that),
+      "dirty" : function(){
+
+      }.bind(that)
+    }
   })
 
   if( that.options.combine ){
@@ -110,6 +122,12 @@ NodesInstance.prototype.insert = function( data, index ) {
     data = this.factory.new( data )
   }
   this.data = this.data.slice(0, index ).concat( data, this.data.slice(index)  )
+
+  _.forEach(this.nodeListeners, function( event, listeners){
+    listeners.forEach(function(listener){
+      data.on(event, listener)
+    })
+  })
 }
 
 //TODO Query Object and Modifier Object EJSON
@@ -127,6 +145,13 @@ NodesInstance.prototype.remove= function(where) {
   var that = this
   this.data.forEach(function( node, index ){
     if( util.objectMatch( node.toObject, where) ){
+      //remove listener first
+      _.forEach(that.nodeListeners, function( event, listeners){
+        listeners.forEach(function(listener){
+          that.data[index].off(event, listener)
+        })
+      })
+
       that.data[index] = false
     }
   })
@@ -137,8 +162,20 @@ NodesInstance.prototype.pull= function() {}
 NodesInstance.prototype.push= function() {}
 NodesInstance.prototype.verify= function() {}
 
-NodesInstance.prototype.commit= function() {}
-NodesInstance.prototype.rollback= function() {}
+NodesInstance.prototype.commit= function( name ) {
+  this.data.forEach(function( node){
+    node.commit( name )
+  })
+}
+NodesInstance.prototype.rollback= function(name) {
+  this.data.forEach(function( node){
+    try{
+      node.rollback( name )
+    }catch(e){
+      console.warn("node can not rollback")
+    }
+  })
+}
 
 
 NodesInstance.prototype.find=NodesInstance.prototype.filter =  function() {
@@ -151,6 +188,20 @@ NodesInstance.prototype.find=NodesInstance.prototype.filter =  function() {
 
 NodesInstance.prototype.is =function(){
   return this.states.is.apply(this.states, Array.prototype.slice.call(arguments))
+}
+
+NodesInstance.prototype.isAny =function(){
+  var args =  Array.prototype.slice.call(arguments)
+  return _.any(this.data, function( node ){
+    return node.is.apply(node, args)
+  })
+}
+
+NodesInstance.prototype.isEvery =function(){
+  var args =  Array.prototype.slice.call(arguments)
+  return _.every(this.data, function( node ){
+    return node.is.apply(node, args)
+  })
 }
 
 NodesInstance.prototype.findOne= function(where) {
@@ -172,6 +223,26 @@ NodesInstance.prototype.every= function() {
 }
 NodesInstance.prototype.any= function() {
   this.data.any.apply(this.data, arguments)
+}
+
+NodesInstance.prototype.on = function( event, handler){
+  this.states.on( event, handler)
+}
+
+NodesInstance.prototype.off = function( event, handler){
+  this.states.removeListener( event, handler)
+}
+
+NodesInstance.prototype.onAny = function( event, handler ){
+  if( !this.nodeListeners[event] ){
+    this.nodeListeners[event] = []
+  }
+
+  this.nodeListeners[event].push(handler)
+
+  this.data.forEach( function(node){
+    node.on( event, handler )
+  })
 }
 
 
