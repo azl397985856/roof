@@ -87,6 +87,7 @@ NodeInstance.prototype.set =function( path, value){
   //TODO 支持通过EJSON的方式来更新字段
 
   this.states.deactivate("clean")
+  console.log("setting", path, value)
   return this.data.set(path, value)
 }
 

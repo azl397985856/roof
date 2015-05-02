@@ -19,12 +19,13 @@ function Frames(options){
 }
 
 Frames.prototype.set = function( path , value ){
+  var that = this
   if( _.isObject(path) ){
     _.forEach( path, function( v, k){
-      setRef( k, v)
+      setRef( that.data, k, v)
     })
   }else{
-    return setRef( this.data, path, value)
+    return setRef( that.data, path, value)
   }
 }
 

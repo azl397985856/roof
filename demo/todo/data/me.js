@@ -1,10 +1,7 @@
-var Node = require("../../src/node")
-
-var userDef = require("../../common/model/user")
-var User = Node( userDef )
+var User = require("./type/user").Node
 var me = User.new()
 
-
-me.pull("me")
+//TODO fetch mine identity from server
+me.set({id:1,name:"jason"})
 
 module.exports = me

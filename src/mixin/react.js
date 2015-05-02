@@ -38,7 +38,7 @@ function roofDataMixin( data, def ){
     this.setState(getStateProxy(randomKey))
   }
 
-  mixinInstance[def.attach] = _.mapValue( def.cursors, function( name){
+  mixinInstance[def.attach] = _.mapValues( def.cursors, function( name){
     return getRef( data, name )
   })
 
@@ -63,6 +63,12 @@ function roofDataMixin( data, def ){
         obj.off("change",updater)
       }
     })
+  }
+
+
+  //utilities
+  mixinInstance[def.attach]._handleFormChange = function( cursor, field, e ){
+    cursor.set(field, e.target.value)
   }
 
   return mixinInstance
