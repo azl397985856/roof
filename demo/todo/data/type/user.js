@@ -1,5 +1,5 @@
-var Node = require("../../../src/node")
-var Nodes= require("../../../src/nodes")
+var Node = require("../../../../src/node")
+var Nodes= require("../../../../src/nodes")
 var User = Node( {} )
 var Users = Nodes(User)
 

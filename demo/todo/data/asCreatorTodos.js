@@ -1,10 +1,35 @@
 var Todos = require("./type/todo").Nodes
 var me = require("./me")
-var todos = Todos.new()
 
+
+var todos
 
 if( me.get("id") ){
-  //TODO fetch from server
+  todos = Todos.new(null,{
+    pattern : {
+      hasRelation : {
+        type : "CREATE",
+        reverse : true,
+        target : {
+          label : "User",
+          id : me.get("id")
+        }
+      },
+      withRelation : {
+        type : "ASSIGNED_TO",
+        reverse : true,
+        target : {
+          label : "User"
+        }
+      }
+    }
+  })
+
+  // fetch from server
+  todos.pull()
+  console.log("pulling from server", todos)
+}else{
+  todos = Todos.new()
 }
 
 

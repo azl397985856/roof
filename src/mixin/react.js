@@ -39,7 +39,9 @@ function roofDataMixin( data, def ){
   }
 
   mixinInstance[def.attach] = _.mapValues( def.cursors, function( name){
-    return getRef( data, name )
+    var dataRef = getRef( data, name )
+    if( !dataRef ){ console.warn("you are requiring an undefined cursor", name, JSON.stringify(data))}
+    return dataRef
   })
 
   mixinInstance.getInitialState = function(){

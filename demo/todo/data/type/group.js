@@ -1,5 +1,5 @@
-var Node = require("../../../src/node")
-var Nodes= require("../../../src/nodes")
+var Node = require("../../../../src/node")
+var Nodes= require("../../../../src/nodes")
 var Group = Node( {} )
 var Groups = Nodes(Group)
 

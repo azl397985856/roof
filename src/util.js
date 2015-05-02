@@ -59,12 +59,15 @@ function decorateWithMiddleware( prototype, action ){
       return promiseSeries(["before","fn","after"],function( fnName){
         if( !that.middlewareActions[action][fnName].length ) return true
         var fns = that.middlewareActions[action][fnName]
+
         //important
         if( fnName === "fn" ) fns.push( rawAction )
 
         var lastResult
         return promiseSeries( fns, function( fn ){
           lastResult = fn.apply( that, [lastResult].concat(argv) )
+          console.log("applied", _.isFunction(fn), fn.toString(), lastResult)
+
           return lastResult
         })
       })
@@ -100,8 +103,7 @@ function promiseSeries( fns, iterator ){
         ++i
         defers[i]&&defers[i].resolve()
       },function(res){
-        ++i
-        defers[i]&&defers[i].reject()
+        throw res
       })
     }else{
       ++i

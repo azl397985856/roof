@@ -3,10 +3,15 @@ var webpack = require('webpack');
 module.exports = {
   devtool: 'eval',
   entry: {
-    simpleText:[
+    //simpleText:[
+    //  'webpack-dev-server/client?http://localhost:9000',
+    //  'webpack/hot/dev-server',
+    //  './demo/simpleText/index.js'
+    //],
+    todo:[
       'webpack-dev-server/client?http://localhost:9000',
       'webpack/hot/dev-server',
-      './demo/simpleText/index.js'
+      './demo/todo/index.js'
     ]
   },
   output: {

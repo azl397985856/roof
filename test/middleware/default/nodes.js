@@ -21,6 +21,7 @@ module.exports = {
   pull : function(){
     fn : function fakePull(){
       var that = this
+      console.log("its working")
 
       var data = [{id:1,name:"miya"},{id:2,name:"walker"}]
 

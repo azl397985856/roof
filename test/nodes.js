@@ -31,12 +31,13 @@ describe("nodes facade methods test",function(){
 describe("states test", function(){
   var users = UserNodes.new()
 
-  it("states from instance methods", function(){
+  it("states from instance methods", function(done){
     users.insert({name:"A",age:16})
     assert.equal( users.is("inserted"), true )
 
     users.pull({age:"<5"}).then(function(){
       assert.equal(users.is("pulled"),true)
+      done()
     })
     assert.equal( users.is("pulling"), true )
   })

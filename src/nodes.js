@@ -52,8 +52,12 @@ SubNodes.prototype.combine = function( combine ){
   this.options.combine = combine
 }
 
-SubNodes.prototype.new = function( options ){
-  return new NodesInstance(this.factory, _.defaults( options || {}, this.options) )
+SubNodes.prototype.new = function( data, options ){
+  var nodes = new NodesInstance(this.factory, _.defaults( options || {}, this.options) )
+  if( data){
+    nodes.fill(data)
+  }
+  return nodes
 }
 
 
@@ -205,7 +209,6 @@ NodesInstance.prototype.isEvery =function(){
 }
 
 NodesInstance.prototype.findOne= function(where) {
-  console.log( where)
   for( var i = 0; i<this.data.length;i++){
     if( util.objectMatch(this.data[i].toObject(), where) ){
       return this.data[i]
@@ -216,6 +219,10 @@ NodesInstance.prototype.findOne= function(where) {
 
 NodesInstance.prototype.forEach= function() {
   this.data.forEach.apply(this.data, arguments)
+}
+
+NodesInstance.prototype.map= function() {
+  return this.data.map.apply(this.data, arguments)
 }
 
 NodesInstance.prototype.every= function() {
