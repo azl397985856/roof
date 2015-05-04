@@ -1,36 +1,32 @@
 var React = require("react")
+var Todo = require("../../data/type/todo").Node
+var Mixin = require("../../../../src/mixin/react")
+var Util = Mixin.util
+var bus = require("../../events")
+require("./input.less")
 
-var data = require("../../data")
-
+var newTodo = Todo.new()
+var todoMixin = new Mixin({todo:newTodo},{cursors:{"todo":"todo"}})
 
 var Index = React.createClass({
-  mixins : [data.mixin],
-  getInitialState : function(){
-    return {
-      todo : this.cursors.todos.new()
-    }
-  },
-  cursors : {
-    todos : ['todos']
-  },
+  mixins : [todoMixin],
   onKeyUp : function(e){
-    var todo = this.state.todo
+    var todo = this.cursors.todo
     if( e.keyCode === 13 ){
-      todo.verify().then(()=>{
-        todo.commit().push().then(function(){
-          this.cursors.todos.insert( todo )
-          this.setState({todo:this.cursors.todos.new()})
-        })
+      bus.fire("todo.create", todo ).then(function(){
+        todo.set("content","")
+      },function(res){
+        alert("创建失败:"+res.error)
       })
     }
   },
   render() {
-    var todo = this.state.todo
-    var error = todo.is("error") ? (<div>{todo.getError().message}</div>) : null
+    var todo = this.cursors.todo
+
     return (
       <div>
-        <input disabled={todo.is("verifying")||todo.is("pushing")} type="text" value={todo.get("content")} onChange={this.set.bind(this,todo,"content")} onKeyUp={this.onKeyUp}/>
-        <div>{error}</div>
+        <input disabled={todo.is("verifying")||todo.is("pushing")} type="text" value={todo.get("content")} onChange={Util.handleFormChange.bind(this,todo,"content")} onKeyUp={this.onKeyUp}/>
+        <div></div>
       </div>
     )
   }

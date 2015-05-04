@@ -7,5 +7,4 @@ var Index = require("./components/index.js")
 
 var container = document.createElement("div")
 document.body.appendChild(container)
-React.render(<Index />, container)
-
+Index( container )

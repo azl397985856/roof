@@ -66,7 +66,7 @@ function decorateWithMiddleware( prototype, action ){
         var lastResult
         return promiseSeries( fns, function( fn ){
           lastResult = fn.apply( that, [lastResult].concat(argv) )
-          console.log("applied", _.isFunction(fn), fn.toString(), lastResult)
+          //console.log("applied", _.isFunction(fn), fn.toString(), lastResult)
 
           return lastResult
         })

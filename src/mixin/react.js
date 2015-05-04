@@ -24,7 +24,7 @@ function getStateProxy( randomKey ){
   return proxyState
 }
 
-function roofDataMixin( data, def ){
+function Mixin( data, def ){
   def = _.defaults(def,{
     attach : "cursors",
     cursors : {}
@@ -76,4 +76,12 @@ function roofDataMixin( data, def ){
   return mixinInstance
 }
 
-module.exports = roofDataMixin
+
+
+module.exports = Mixin
+
+module.exports.util = {
+  handleFormChange : function( data, field, e ){
+    data.set(field, e.target.value)
+  }
+}

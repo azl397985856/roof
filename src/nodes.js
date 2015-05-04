@@ -134,8 +134,6 @@ NodesInstance.prototype.insert = function( data, index ) {
   })
 }
 
-//TODO Query Object and Modifier Object EJSON
-
 
 NodesInstance.prototype.update = function( where, updateEJSON) {
   this.data.forEach(function( node ){

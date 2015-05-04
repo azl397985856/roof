@@ -4,9 +4,13 @@ var me = require("./me")
 
 var todos
 
+
+//if you want to set default data.
+//set it here, so it can be rendered by server in first page
 if( me.get("id") ){
   todos = Todos.new(null,{
     pattern : {
+      //<-[CREATE]-(User {id:`me.get("id")`})
       hasRelation : {
         type : "CREATE",
         reverse : true,
@@ -15,6 +19,7 @@ if( me.get("id") ){
           id : me.get("id")
         }
       },
+      //<-[ASSIGNED_TO]-(User)
       withRelation : {
         type : "ASSIGNED_TO",
         reverse : true,

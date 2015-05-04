@@ -1,6 +1,6 @@
 var React = require("react")
 var User = require("../user")
-
+require("./index.less")
 
 var myGroupsMixin = require("../../data")({cursors:{
   myGroups : "asCreatorGroups"
@@ -16,14 +16,17 @@ module.exports = React.createClass({
     var groupNodes = (<div></div>)
 
     return (
-      <div>
+      <div className="sidebar">
+        <div className="sidebar-img">
+          <img src="https://todo.zerojs.io/nine/images/logo.svg" />
+        </div>
         <User />
         <ul>
           <li>
-            <a>分配给我的</a>
+            <a href="#/as-executor-todos">分配给我的</a>
           </li>
           <li>
-            <a>我创建的</a>
+            <a href="#/as-creator-todos">我创建的</a>
           </li>
         </ul>
         <ul>

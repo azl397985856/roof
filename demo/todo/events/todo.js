@@ -1,24 +1,10 @@
-var bus = require("./bus")
-var todos = require("./data").select("todos")
-var Promise = require("bluebird")
-var TodoNode = require("../data/todo").TodoNode
-var UserNode = require("../data/me").UserNode
 
+module.exports = function( bus ){
+  bus.module("todo")
 
-bus.on("todo.create",function( rawTodo){
-  var todo = rawTodo
-  var executor
+  bus.on("todo.create",function createTodo( todo ){
+    alert("你正在创建新todo:"+todo.get("content"))
+    return todo.push()
+  })
 
-  if( rawTodo.executor  ){
-    todo = new TodoNode(rawTodo)
-    executor = new UserNode(rawTodo.executor )
-    todo.relateTo( executor ).as("ASSIGNED_TO")
-  }
-
-  Promise.waterfall([
-    todos.insert( todo ),
-    todos.commit(),
-    todos.push()
-  ])
-})
-
+}

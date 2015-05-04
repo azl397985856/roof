@@ -1,26 +1,27 @@
 var React = require("react")
-var data = require("../data")
+require("./item.less")
 
 var Index = React.createClass({
-  getInitialState(){
-    return {
-      todo : this.props.todo
+  render() {
+    var creatorNode = null;
+    var executorNode = null;
+
+    if( this.props.creator ){
+      creatorNode = (<span className="todo-item-creator-name">by {this.props.creator.name}</span>)
     }
-  },
-  remove(){
-    this.state.todo.destroy().push()
-  },
-  complete(){
-    var todo = this.state.todo
-    todo.set("complete",true)
-    todo.commit().push()
-  },
-  render : function() {
+
+    if( this.props.executor ){
+      executorNode = (<span className="todo-item-executor-name">to {this.props.executor.name}</span>)
+    }
+
     return (
-      <div>
-        <span>{this.state.todo.get("content")}</span>
-        <a onClick={this.remove}>remove</a>
-        <a onClick={this.complete}>complete</a>
+      <div className="todo-item">
+        <span className="todo-item-content-prefix"></span>
+        <span className="todo-item-content">
+        {this.props.content}
+        </span>
+        {creatorNode}
+        {executorNode}
       </div>
     )
   }

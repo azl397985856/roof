@@ -1,7 +1,6 @@
 var Promise = require("bluebird")
 var me = require("../me")
 
-
 module.exports = {
   Nodes: {
     pull: {
@@ -12,28 +11,45 @@ module.exports = {
         var creator,executer
 
 
-        if( that.options.pattern.hasRelation && that.options.pattern.hasRelation.type === "CREATED" ){
-          if( that.options.pattern.hasRelation.target.id === me.get("id")){
-            creator = me
-          }else{
-            creator = randomUser( that.options.pattern.hasRelation.target.id )
-          }
-        }
+        console.log( that.options.pattern.hasRelation )
 
-        if( that.options.pattern.withRelation && that.options.pattern.withRelation.type === "ASSINGED_TO" ) {
-          executer = randomUser()
-        }
+
 
         while( amount-- ){
+          if( that.options.pattern.hasRelation  ){
+            if(  that.options.pattern.hasRelation.type === "CREATED" && that.options.pattern.hasRelation.target.id === me.get("id")){
+              creator = me
+            }else if(that.options.pattern.hasRelation.type === "ASSIGNED_TO" && that.options.pattern.hasRelation.target.id === me.get("id")){
+              creator = randomUser( that.options.pattern.hasRelation.target.id )
+            }
+          }
+
+          if( that.options.pattern.withRelation && that.options.pattern.withRelation.type === "ASSIGNED_TO" ) {
+            executer = Math.random() > 0.5 ? randomUser() : me.toObject()
+          }
+
           tasks.push( randomTask(  creator, executer ) )
         }
 
 
-        return new Promise(function (resolve) {
-          setTimeout(function () {
-            that.fill(tasks)
+        return new Promise((resolve) =>{
+          setTimeout( () =>{
+            this.fill(tasks)
             resolve(tasks)
-          }, 4000)
+          }, 100)
+        })
+      }
+    }
+  },
+  Node : {
+    push : {
+      fn : function(){
+        console.log("pushing todo", JSON.stringify(this.data))
+        return new Promise( (resolve)=> {
+          setTimeout( ()=> {
+            this.set("id", (new Date()).getTime())
+            resolve(this.toObject())
+          }, 2000)
         })
       }
     }
@@ -54,8 +70,8 @@ function randomTask(  creator, executor ){
   if( creator ){
     task.relations["CREATE"]={
         type : "CREATE",
-          reverse : true,
-          target : _.extend({
+        reverse : true,
+        target : _.extend({
           label : "User"
         }, creator)
       }

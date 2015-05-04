@@ -137,7 +137,7 @@ NodeInstance.prototype.is =function(){
 NodeInstance.prototype.pull = NodeInstance.prototype.push = function rawUpdate( promise ){
   //this function will be called after user's handler
   var that = this
-  return promise.then(function(){
+  return Promise.resolve(promise).then(function(){
     that.states.activate("clean")
     that.states.reset("valid")
     that.states.reset("verify")
@@ -152,7 +152,7 @@ NodeInstance.prototype.pull = NodeInstance.prototype.push = function rawUpdate( 
 NodeInstance.prototype.verify = function( promise ) {
   //this function will be called after user's handler
   var that = this
-  return promise.then(function () {
+  return Promise.resolve(promise).then(function () {
     that.states.activate("valid")
   }, function () {
     that.states.deactivate("valid")
