@@ -47,8 +47,32 @@ module.exports = {
         console.log("pushing todo", JSON.stringify(this.data))
         return new Promise( (resolve)=> {
           setTimeout( ()=> {
-            this.set("id", (new Date()).getTime())
-            resolve(this.toObject())
+
+            var todo = this.toObject()
+
+            todo.id= (new Date()).getTime()
+
+            todo.relations = {
+                CREATE: {
+                type : "CREATE",
+                  reverse : true,
+                  target : _.extend({
+                  label : "User"
+                },me.toObject())
+              }
+            }
+
+            if( !this.get("relations.ASSIGNED_TO") ){
+              todo.relations.ASSIGNED_TO = {
+                type : "ASSIGNED_TO",
+                reverse : true,
+                target : _.extend({
+                  label : "User"
+                },me.toObject())
+              }
+            }
+
+            resolve(todo)
           }, 2000)
         })
       }

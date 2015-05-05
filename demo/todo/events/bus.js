@@ -425,6 +425,7 @@ Bus.prototype.fire = function (opt) {
   
 
   logger.debug("firing :", opt.event, 'bus id:', this._id)
+  logger.log("firing :", opt.event, 'bus id:', this._id)
 
   var args = _.toArray(arguments).slice(1) || [],
     matchedEventStack,
