@@ -20,7 +20,7 @@ node server.js
  - [浏览器端对象集合设计](https://docs.google.com/document/d/1IGVabrlpGDul-vLjpr5r599kDhlbfyc4Bi58VhaNZGw/edit?usp=sharing)
  - [应用实现中的问题和解决方案](https://docs.google.com/document/d/1fsc5JZCSopnL1UoWHK0b4Nrp2zmdGEZl6wPqtWAmviY/edit?usp=sharing)
  - [React Mixin 实现](https://docs.google.com/document/d/1L7m8h4o8d1f2g_tcKFC8oKRnt0Csbv_tnazVka8p0TU/edit?usp=sharing)
-
+ - [事件系统设计](https://docs.google.com/document/d/1UW9Lci7KpvPNXLG7n5v_SIEQQOQzIwtHIos44Fl020s/edit?usp=sharing)
 
 ## 进度规划
 
