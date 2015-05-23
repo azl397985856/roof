@@ -1,15 +1,15 @@
 var assert = require("assert")
 var _ = require("lodash")
-var Node = require("../src/node")
-var defaultMiddleWare = require("./middleware/default/node")
+var Node = require("../../src/node")
+var defaultMiddleWare = require("../middleware/default/node")
 var async = require("async")
 
-var userDef = require("./data/user")
-var User = Node( userDef, {middleware:defaultMiddleWare} )
+var userDef = require("../data/user")
+var User = Node.createClass( userDef, {middleware:defaultMiddleWare} )
 
 
 describe("initial states test",function(){
-  var john = User.new()
+  var john = new User
   it("initial state should match",function(){
 
     assert.equal( john.is("unpulled"), true )
@@ -41,7 +41,7 @@ describe("initial states test",function(){
 })
 
 describe("data set test", function(){
-  var jason = User.new()
+  var jason = new User
   var props = {
     name : "jason",
     age : 25
@@ -63,7 +63,7 @@ describe("data set test", function(){
 })
 
 describe("commit and rollback test", function(){
-  var walker = User.new()
+  var walker = new User
   var commitName = "first_commit"
   var props = {
     name : "walker",
@@ -95,7 +95,7 @@ describe("commit and rollback test", function(){
 
 describe("async state test", function(){
   it('async method should have async state', function( done ){
-    var disel = User.new()
+    var disel = new User
     var props = {
       name : "disel",
       age : 32
@@ -125,7 +125,7 @@ describe("async state test", function(){
 
 describe("combine action test", function(){
 
-  var lati = User.new()
+  var lati = new User
   lati.combine(["set","commit"])
 
   it("set and commit state should change together", function( done ){
@@ -136,7 +136,7 @@ describe("combine action test", function(){
     })
   })
 
-  var rome = User.new()
+  var rome = new User
   rome.combine(['push','commit'])
 
   it("auto commit after push", function( done){
@@ -154,7 +154,7 @@ describe("combine action test", function(){
 describe("state event test", function(){
 
   it("state change should fire event", function(done){
-    var miya = User.new()
+    var miya = new User
     async.parallel([
       function( cb ){
         miya.on("set", function( val, oldVal){

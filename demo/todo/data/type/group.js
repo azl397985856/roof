@@ -1,7 +1,7 @@
 var Node = require("../../../../src/node")
 var Nodes= require("../../../../src/nodes")
-var Group = Node( {} )
-var Groups = Nodes(Group)
+var Group = Node.createClass( {} )
+var Groups = Nodes.createClass(Group)
 
 module.exports = {
   Node: Group,

@@ -18,25 +18,21 @@ var NodeActionTense = {
 
 var NodeActions = Object.keys(NodeActionTense)
 
-function Node( def, options ){
-  return new SubNode( def, _.cloneDeep(options) )
+var Node = {
+  createClass : function( def, options ){
+    var newNodeClass = function( data, options){
+      var ins = new NodeInstance(newNodeClass.def, _.defaults( options || {}, newNodeClass.options) )
+      if( data ) ins.fill( data )
+      return ins
+    }
+    newNodeClass.def = def
+    newNodeClass.options = options
+    newNodeClass.combine = function( combine ){
+      newNodeClass.options.combine = combine
+    }
+    return newNodeClass
+  }
 }
-
-function SubNode( def, options ){
-  this.def = def || {}
-  this.options = options || {}
-}
-
-SubNode.prototype.combine = function( combine ){
-  this.options.combine = combine
-}
-
-SubNode.prototype.new = function( data , options ){
-  var ins = new NodeInstance(this.def, _.defaults( options || {}, this.options) )
-  if( data ) ins.fill( data )
-  return ins
-}
-
 
 function NodeInstance( def, options ){
   var that = this
@@ -86,6 +82,10 @@ NodeInstance.prototype.set =function( path, value){
 
   //TODO 支持通过EJSON的方式来更新字段
 
+  if( path instanceof CombinedArgv ){
+    value = path[1]
+    path = path[0]
+  }
   this.states.deactivate("clean")
   console.log("setting", path, value)
   return this.data.set(path, value)

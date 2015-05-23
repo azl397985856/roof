@@ -1,20 +1,18 @@
 
-var userDef = require("./data/user")
+var userDef = require("../data/user")
 var assert = require("assert")
 var _ = require("lodash")
-var Node = require("../src/node")
-var Nodes = require("../src/nodes")
-var defaultNodeMiddleWare = require("./middleware/default/node")
-var defaultNodesMiddleWare = require("./middleware/default/nodes")
-var facade = require("./middleware/default/facade")
+var Node = require("../../src/node")
+var Nodes = require("../../src/nodes")
+var defaultNodeMiddleWare = require("../middleware/default/node")
+var defaultNodesMiddleWare = require("../middleware/default/nodes")
+var facade = require("../middleware/default/facade")
 var async = require("async")
 var Promise= require("bluebird")
 
 
-
-
-var User = Node( userDef, {middleware:defaultNodeMiddleWare} )
-var UserNodes = Nodes( User , {middleware:defaultNodesMiddleWare,facade:facade} )
+var User = Node.createClass( userDef, {middleware:defaultNodeMiddleWare} )
+var UserNodes = Nodes.createClass( User , {middleware:defaultNodesMiddleWare,facade:facade} )
 
 
 describe("nodes facade methods test",function(){
@@ -29,7 +27,7 @@ describe("nodes facade methods test",function(){
 
 
 describe("states test", function(){
-  var users = UserNodes.new()
+  var users = new UserNodes
 
   it("states from instance methods", function(done){
     users.insert({name:"A",age:16})
@@ -55,7 +53,7 @@ describe("states test", function(){
 
 describe("events test", function(){
   it("state change should fire event", function(done){
-    var users = UserNodes.new()
+    var users = new UserNodes
     async.parallel([
       function( cb ){
         users.on("pushing", function( val, oldVal){
@@ -77,32 +75,32 @@ describe("events test", function(){
 
     users.push()
   })
-
-  it("sub object event should propagate", function(done){
-    var users = UserNodes.new()
-    var user = User.new()
-    users.insert( user )
-    async.parallel([
-      function( cb ){
-        users.onAny("pushing", function( val, oldVal){
-          assert.equal( val, 'pushing')
-          assert.equal( oldVal, 'unpushed')
-          cb()
-        })
-      },
-      function( cb ){
-        users.onAny("pushed", function( val, oldVal){
-          assert.equal( val, 'pushed')
-          assert.equal( oldVal, 'pushing')
-          cb()
-        })
-      }
-    ], function(){
-      done()
-    });
-
-    user.push()
-  })
+  //
+  //it("sub object event should propagate", function(done){
+  //  var users = new UserNodes
+  //  var user = User.new()
+  //  users.insert( user )
+  //  async.parallel([
+  //    function( cb ){
+  //      users.onAny("pushing", function( val, oldVal){
+  //        assert.equal( val, 'pushing')
+  //        assert.equal( oldVal, 'unpushed')
+  //        cb()
+  //      })
+  //    },
+  //    function( cb ){
+  //      users.onAny("pushed", function( val, oldVal){
+  //        assert.equal( val, 'pushed')
+  //        assert.equal( oldVal, 'pushing')
+  //        cb()
+  //      })
+  //    }
+  //  ], function(){
+  //    done()
+  //  });
+  //
+  //  user.push()
+  //})
 })
 
 //

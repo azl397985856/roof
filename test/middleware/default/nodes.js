@@ -8,11 +8,14 @@ module.exports = {
         console.warn("you are trying to push a uncommitted data")
       }
 
-      var data = that.toPlainObject()
-      data.id = 1
+      var data = that.toArray()
+      data.forEach(function(node, index){
+        node.id = index
+      })
       return new Promise(function( resolve ){
         setTimeout(function(){
-          that.replace( data )
+          that.empty( data )
+          that.fill( data )
           resolve(data)
         },100)
       })

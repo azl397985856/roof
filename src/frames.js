@@ -44,7 +44,8 @@ Frames.prototype.toObject = function(){
 Frames.prototype.commit = function( commitName ){
   commitName = commitName || this.historyNames.length
 
-  if( this.historyNames.indexOf( commitName) ){
+  if( this.historyNames.indexOf( commitName) !== -1){
+    console.log( this.historyNames)
     throw new Error("commit name already exists: "+ commitName)
   }
 
@@ -68,6 +69,7 @@ Frames.prototype.rollback = function( commitName ){
   this.historyNames.splice(index)
 
   this.data = toRestore
+  return true
 }
 
 

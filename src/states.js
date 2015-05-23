@@ -48,8 +48,12 @@ States.prototype.set = function( name, value){
   var thisReadable = this.def.tenses[name] ? this.def.tenses[name][ActionStates.indexOf(value)] : value
 
   //console.log( ActionStates.indexOf(lastValue), lastValue)
-
   this.emit("change", thisReadable, lastReadable )
+  if( thisReadable == "pushed"){
+    console.log( name, value, lastValue,this.states[name],thisReadable, lastReadable)
+  }else if(thisReadable=="pushing"){
+    console.log( name, value, lastValue,this.states[name],thisReadable, lastReadable)
+  }
   this.emit( thisReadable, thisReadable, lastReadable )
 }
 

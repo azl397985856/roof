@@ -1,7 +1,7 @@
 var Group = require("./type/group").Nodes
 var me = require("./me")
 
-var groups = Group.new([])
+var groups = new Group([])
 
 if( me.get("id") ){
   //TODO fetch from server

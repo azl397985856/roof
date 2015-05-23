@@ -1,5 +1,5 @@
 var Group = require("./type/group").Nodes
-var groups = Group.new()
+var groups = new Group()
 
 
 

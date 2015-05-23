@@ -8,7 +8,7 @@ module.exports = {
         console.warn("you are trying to push a uncommitted data")
       }
 
-      var data = that.toPlainObject()
+      var data = that.toObject()
       data.id = 1
       return new Promise(function( resolve ){
         setTimeout(function(){

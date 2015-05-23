@@ -8,7 +8,7 @@ var todos
 //if you want to set default data.
 //set it here, so it can be rendered by server in first page
 if( me.get("id") ){
-  todos = Todos.new(null,{
+  todos = new Todos(null,{
     pattern : {
       //<-[ASSIGNED_TO]-(User {id:`me.get("id")`})
       hasRelation : {
@@ -34,7 +34,7 @@ if( me.get("id") ){
   todos.pull()
   console.log("pulling from server", todos)
 }else{
-  todos = Todos.new()
+  todos = new Todos()
 }
 
 

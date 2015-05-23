@@ -17,50 +17,48 @@ var NodesActionTense = {
   'fill' : ['unfilled','filling','filled'],
   'insert' : ['uninserted','inserting','inserted'],
   'update' : ['unupdated','updating','updated'],
-  'remove' : ['unremoved','removing','removed']
+  'remove' : ['unremoved','removing','removed'],
+  'empty' : ['unempty','emptying','emptied']
 }
 
 var NodesActions = Object.keys(NodesActionTense)
 
-function Nodes( factory, options ){
-  return new SubNodes( factory, _.cloneDeep(options) )
-}
+var Nodes = {
+  createClass:function( factory, options){
+      var newClass =  function(data,options){
+        var nodes = new NodesInstance(newClass.factory, _.defaults( options || {}, newClass.options) )
+        if( data){
+          nodes.fill(data)
+        }
+        return nodes
+      }
 
-function SubNodes( factory, options ){
-  var that = this
-  this.factory = factory
-  this.options = options || {}
-  if( this.options.facade ){
-    _.forEach(this.options.facade, function( fn, name ){
-      that[name] = fn.bind(that)
-    })
+    newClass.factory = factory
+    newClass.options = options || {}
+    if( newClass.options.facade ){
+      _.forEach(newClass.options.facade, function( fn, name ){
+        newClass[name] = fn.bind(newClass)
+      })
+    }
+
+    //facade methods
+    newClass.insert = function(){
+      console.warn("you should use your own facade method")
+    }
+    newClass.update= function(){
+      console.warn("you should use your own facade method")
+    }
+    newClass.remove= function(){
+      console.warn("you should use your own facade method")
+    }
+
+    newClass.combine = function( combine ){
+      newClass.options.combine = combine
+    }
+
+    return newClass
   }
 }
-
-//facade methods
-SubNodes.prototype.insert = function(){
-  console.warn("you should use your own facade method")
-}
-SubNodes.prototype.update= function(){
-  console.warn("you should use your own facade method")
-}
-SubNodes.prototype.remove= function(){
-  console.warn("you should use your own facade method")
-}
-
-SubNodes.prototype.combine = function( combine ){
-  this.options.combine = combine
-}
-
-SubNodes.prototype.new = function( data, options ){
-  var nodes = new NodesInstance(this.factory, _.defaults( options || {}, this.options) )
-  if( data){
-    nodes.fill(data)
-  }
-  return nodes
-}
-
-
 
 
 
@@ -123,7 +121,7 @@ NodesInstance.prototype.clone = function( cloneData ){
 NodesInstance.prototype.insert = function( data, index ) {
   index = index || 0
   if( _.isPlainObject( data) && this.factory ){
-    data = this.factory.new( data )
+    data = new this.factory( data )
   }
   this.data = this.data.slice(0, index ).concat( data, this.data.slice(index)  )
 
@@ -146,7 +144,7 @@ NodesInstance.prototype.update = function( where, updateEJSON) {
 NodesInstance.prototype.remove= function(where) {
   var that = this
   this.data.forEach(function( node, index ){
-    if( util.objectMatch( node.toObject, where) ){
+    if( util.objectMatch( node.toObject(), where) ){
       //remove listener first
       _.forEach(that.nodeListeners, function( event, listeners){
         listeners.forEach(function(listener){
@@ -158,6 +156,21 @@ NodesInstance.prototype.remove= function(where) {
     }
   })
   that.data = _.compact( that.data )
+}
+
+NodesInstance.prototype.empty = function(){
+  var that = this
+  this.data.forEach(function( node, index ){
+      //remove listener first
+    _.forEach(that.nodeListeners, function( event, listeners){
+      listeners.forEach(function(listener){
+        that.data[index].off(event, listener)
+      })
+    })
+
+    that.data[index] = false
+  })
+  that.data = []
 }
 
 NodesInstance.prototype.pull= function() {}
@@ -221,6 +234,12 @@ NodesInstance.prototype.forEach= function() {
 
 NodesInstance.prototype.map= function() {
   return this.data.map.apply(this.data, arguments)
+}
+
+NodesInstance.prototype.toArray= function() {
+  return this.data.map(function( node ){
+    return node.toObject()
+  })
 }
 
 NodesInstance.prototype.every= function() {

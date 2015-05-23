@@ -5,7 +5,7 @@ var Util = Mixin.util
 var bus = require("../../events")
 require("./input.less")
 
-var newTodo = Todo.new()
+var newTodo = new Todo()
 var todoMixin = new Mixin({todo:newTodo},{cursors:{"todo":"todo"}})
 
 var Index = React.createClass({
