@@ -2,20 +2,18 @@ var localTodos = require("../data").source.asCreatorTodos
 
 
 module.exports = function( bus ){
-  bus.module("todo")
 
   bus.on("todo.create",function createTodo( todo ){
     //alert("你正在创建新todo:"+todo.get("content"))
-    var promise = todo.push()
-    promise.block = true
-    return promise
+    return todo.push()
   })
 
   bus.on("todo.create",{
-    "function":function updateLocalTodos( todo){
+    "fn":function updateLocalTodos( todo){
+      console.log("updating local todos")
       localTodos.insert( todo )
     },
-    "last" : true
+    "waitFor" : "todo.createTodo"
   })
 
 }

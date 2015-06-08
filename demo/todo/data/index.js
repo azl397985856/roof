@@ -1,9 +1,8 @@
 var _ = require("lodash")
-var RoofMixin = require("../../../src/mixin/react.js")
-var dataNames = ["me","asCreatorTodos","asExecutorTodos","asCreatorGroups","asMemberGroups","groups","asApplierGroups"]
+var RoofMixin = require("roof-node/mixin/react.js")
+var dataNames = require("./modules.js")
 
 var source = _.zipObject( dataNames, dataNames.map(function(name){return require("./"+name)}))
-
 
 
 function mixinFactory( mixinDef ){

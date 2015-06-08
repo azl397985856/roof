@@ -1,8 +1,7 @@
-var Promise = require("bluebird")
 
 module.exports = {
   Nodes: {
-    pull: function () {
+    pull:  {
       fn : function fakePull() {
         var that = this
 

@@ -1,5 +1,5 @@
-var Node = require("../../../../src/node")
-var Nodes= require("../../../../src/nodes")
+var Node = require("roof-node/src/node")
+var Nodes= require("roof-node/src/nodes")
 var Group = Node.createClass( {} )
 var Groups = Nodes.createClass(Group)
 

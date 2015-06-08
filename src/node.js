@@ -1,4 +1,3 @@
-var Promise = require("bluebird")
 var _ = require("lodash")
 var Frames = require("./frames")
 var States = require("./states")
@@ -31,6 +30,9 @@ var Node = {
       newNodeClass.options.combine = combine
     }
     return newNodeClass
+  },
+  isNodeInstance :function ( obj ){
+    return obj instanceof NodeInstance
   }
 }
 
@@ -118,6 +120,11 @@ NodeInstance.prototype.get = function(path){
   return this.data.get(path)
 }
 
+NodeInstance.prototype.getRef = function(path){
+  if( _.isArray(path) ) path = path.join(".")
+  return this.data.getRef( path)
+}
+
 NodeInstance.prototype.toObject = function(path){
   //TODO
   return this.data.toObject()
@@ -177,7 +184,7 @@ NodeInstance.prototype.combine = function( actionsToCombine ){
   var that = this
   that[mainAction] = function(){
     var argv = Array.prototype.slice.call(arguments)
-    return Promise.each( actionsToCombine, function(action){
+    return util.promiseSeries( actionsToCombine, function(action){
       console.log("calling combined action", action)
       return NodeInstance.prototype[action].call( that, new CombinedArgv( _.clone(actionsToCombine), _.cloneDeep(argv)) )
     })

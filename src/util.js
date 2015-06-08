@@ -1,4 +1,4 @@
-var Promise = require("bluebird")
+var bPromise = require("bluebird")
 var _ = require("lodash")
 
 
@@ -78,6 +78,7 @@ function decorateWithMiddleware( prototype, action ){
   }
 }
 
+//TODO 去掉bluebird
 function promiseSeries( fns, iterator ){
   var defers = fns.map(function(){
     var resolve, reject;
@@ -95,20 +96,24 @@ function promiseSeries( fns, iterator ){
     return d.promise
   })
   var i = 0
-  var res = Promise.each(promises, function(){
+  var res = new Promise((resolve, reject)=>{
 
-    var res = iterator( fns[i] )
-    if( res && _.isFunction( res.then ) ){
-      res.then(function(){
+    bPromise.each(promises, function(){
+
+      var res = iterator( fns[i] )
+      if( res instanceof Promise){
+        res.then(function(){
+          ++i
+          defers[i]&&defers[i].resolve()
+        },function(res){
+          throw res
+        })
+      }else{
         ++i
         defers[i]&&defers[i].resolve()
-      },function(res){
-        throw res
-      })
-    }else{
-      ++i
-      defers[i]&&defers[i].resolve()
-    }
+      }
+    }).then(resolve,reject)
+
   })
   defers[0].resolve()
   return res

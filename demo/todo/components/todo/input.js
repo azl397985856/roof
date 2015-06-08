@@ -16,7 +16,7 @@ var Index = React.createClass({
       bus.fire("todo.create", todo ).then(function(){
         todo.set("content","")
       },function(res){
-        alert("创建失败:"+res.error)
+        alert("创建失败:"+res.data)
       })
     }
   },

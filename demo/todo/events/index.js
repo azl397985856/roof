@@ -1,9 +1,14 @@
-var Bus = require("./bus")
+
+//TODO webpack打包失效， 返回空对象
+var Bus = require( "roof-bus/src/index.js")
+import modules from "./modules.js"
+
 var bus = new Bus
 
-require("./todo")(bus)
-require("./security")(bus)
+modules.forEach(function( moduleName){
+    bus._module.set(moduleName)
+    require("./"+moduleName)(bus)
+})
 
-bus.start()
 
 module.exports = bus
