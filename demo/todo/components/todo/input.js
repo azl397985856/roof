@@ -1,6 +1,6 @@
 var React = require("react")
-var Todo = require("../../data/type/todo").Node
-var Mixin = require("../../../../src/mixin/react")
+var Todo = require("../../common/type/todo").Node
+var Mixin = require("roof-node/mixin/react.js")
 var Util = Mixin.util
 var bus = require("../../events")
 require("./input.less")

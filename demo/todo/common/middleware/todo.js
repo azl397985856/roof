@@ -1,4 +1,4 @@
-var me = require("../me")
+var me = require("../../data/me")
 
 module.exports = {
   Nodes: {

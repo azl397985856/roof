@@ -1,4 +1,4 @@
-var User = require("./type/user").Node
+var User = require("../common/type/user").Node
 var me = new User()
 
 //TODO read user from sension

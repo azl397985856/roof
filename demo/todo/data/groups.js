@@ -1,4 +1,4 @@
-var Group = require("./type/group").Nodes
+var Group = require("../common/type/group").Nodes
 var groups = new Group()
 
 

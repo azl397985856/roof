@@ -1,4 +1,4 @@
-var Todos = require("./type/todo").Nodes
+var Todos = require("../common/type/todo").Nodes
 var me = require("./me")
 
 

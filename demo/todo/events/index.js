@@ -1,7 +1,7 @@
 
 //TODO webpack打包失效， 返回空对象
-var Bus = require( "roof-bus/src/index.js")
-import modules from "./modules.js"
+var Bus = require("../lib/roof-dev")( require( "roof-bus/lib/index.js") )
+var modules =require("./modules.js")
 
 var bus = new Bus
 
