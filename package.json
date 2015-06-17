@@ -28,7 +28,6 @@
     "webpack-dev-server": "~1.8.2",
     "commander": "~2.8.1",
     "win-spawn": "~2.0.0",
-    "npm-install": "~0.0.1",
     "spawn-npm-install": "~1.1.0",
     "mkdirp": "~0.5.1"
   },

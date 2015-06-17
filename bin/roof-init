@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
 var program = require('commander');
-// var readJson = require("read-package-json");
-// var npm_install = require('npm-install');
 var install = require('spawn-npm-install')
 var path = require('path');
 var fs = require('fs');
