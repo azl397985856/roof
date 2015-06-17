@@ -1,0 +1,62 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var spawn = require('win-spawn');
+var path = require('path');
+var fs = require('fs');
+var join = path.join;
+var exists = fs.existsSync;
+
+
+// usage
+
+program
+  .version(require('../package').version)
+  .usage('<command>');
+
+// sub-command help
+
+program.on('--help', function(){
+  console.log('  Commands:');
+  console.log();
+  console.log('    init          init the roof');
+  console.log();
+  process.exit();
+});
+
+// parse argv
+
+program.parse(process.argv);
+
+// args void of cmd
+
+var args = process.argv.slice(3);
+
+// command
+
+var cmd = program.args[0];
+
+// display help
+
+if (!cmd) program.help()
+
+// executable
+
+var bin = 'roof-' + cmd;
+
+// display help if bin does not exist
+
+if (!exists(bin)) {
+  console.error('\n  %s(1) does not exist', bin);
+  program.help();
+}
+
+
+
+// spawn
+
+var proc = spawn(bin, args, { stdio: 'inherit', customFds: [0, 1, 2] });
+
+proc.on('close', function(code){
+  process.exit(code);
+});

@@ -25,7 +25,12 @@
     "url-loader": "~0.5.5",
     "uuid": "~2.0.1",
     "webpack": "~1.8.10",
-    "webpack-dev-server": "~1.8.2"
+    "webpack-dev-server": "~1.8.2",
+    "commander": "~2.8.1",
+    "win-spawn": "~2.0.0",
+    "npm-install": "~0.0.1",
+    "spawn-npm-install": "~1.1.0",
+    "mkdirp": "~0.5.1"
   },
   "devDependencies": {
     "babel": "~5.2.17",
