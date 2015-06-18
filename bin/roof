@@ -46,7 +46,7 @@ var bin = 'roof-' + cmd;
 
 // display help if bin does not exist
 
-if (!exists(bin)) {
+if (!exists(join(__dirname, bin))) {
   console.error('\n  %s(1) does not exist', bin);
   program.help();
 }
