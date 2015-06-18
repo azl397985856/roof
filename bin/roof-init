@@ -60,9 +60,9 @@ mkdir(dir + '/data');
 mkdir(dir + '/events');
 
 // copy from src
-var template = read('../src/index.js', 'utf8');
-write(join(dir + '/data/index.js'), template);
-write(join(dir + '/events/index.js'), template);
+var template = read(join(__dirname, '../src/index.js'), 'utf8');
+write(join(dir, '/data/index.js'), template);
+write(join(dir, '/events/index.js'), template);
 
 // 全局安装roof
 
@@ -75,7 +75,7 @@ fs.readFile('../package.json', function (err, data) {
   if (!data.dependencies.roof) {
     // data.dependencies.roof = '0.0.1';
     // fs.writeFileSync('../package.json', JSON.stringify(data, null, 2));
-    install(['roof'], { saveDev: true, stdio: 'inherit' }, function(err) {
+    install(['roof'], { save: true }, function(err) {
       if (err) {
         console.error("Could not install:\n" + err.message)
       }
