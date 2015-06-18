@@ -2,4 +2,10 @@ import Bus from "roof-bus"
 import Node from "roof-node/lib/node"
 import Nodes from "roof-node/lib/nodes"
 
-export default {Bus,Node,Nodes}
+var Roof =  {Bus,Node,Nodes}
+
+if( !(typeof window == 'undefined' )) {
+    window.Roof = Roof
+}
+
+export default Roof

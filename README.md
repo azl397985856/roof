@@ -1,18 +1,18 @@
 
-## 示例
+## 介绍
 
-clone 到本地，在根目录下执行:
+Roof 是一个能帮助你构建高质量单页应用的前端框架，它擅长于管理应用数据和逻辑。特别适用于数据概念多、业务逻辑复杂的项目。使用 Roof 之后，应用的可维护性、可扩展性将得到大幅提升。
 
-```
-tnpm install
-node server.js
-```
+它和具体的渲染框架无关，但是配合 React 使用的话能实现服务器端渲染等高级功能。  
+以下是常用的 Roof 资源：
 
-打开浏览器到 [http://localhost:9000/demo/todo](http://localhost:9000/demo/todo)。
-[应用讲解视频](http://yunpan.alibaba-inc.com/share/link/N2OiMbbNaJ)
+ - [Roof 使用文档](http://si.alipay.im/roof/roof-book/)
+ - [Roof Demo](http://gitlab.alipay-inc.com/roof/roof-demo/tree/master)
+ - [Roof Dev Tool](http://gitlab.alipay-inc.com/roof/roof-dev-tool/tree/master)
 
 
-## 文档
+
+## 开发文档
 
  - [设计概览](https://docs.google.com/document/d/1lGEA_hwCrRqnnMVbNLT318IYO68u35-uUdU2X7cxCDs/edit?usp=sharing)
  - [技术架构概览](https://docs.google.com/document/d/1vJy815sliqTGTTKUPs6zapi5MsdKni81GAeIIpDlSas/edit?usp=sharing)
@@ -25,18 +25,18 @@ node server.js
 ## 进度规划
 
  - [ ] 事件代理类开发 (12)
-   - [ ] 模块功能梳理，代码小范围重构 (3)
-   - [ ] waitFor 选项 (1)
-   - [ ] blockFor 选项 (1)
-   - [ ] 无 module 模式 (1)
+   - [x] 模块功能梳理，代码小范围重构 (3)
+   - [x] waitFor 选项 (1)
+   - [x] blockFor 选项 (1)
+   - [x] 无 module 模式 (1)
    - [ ] 服务器端支持 generator (2)
    - [ ] 将调用栈记录功能移到时间代理类外 (2)
-   - [ ] 内存泄露检测 (2)
- - [ ] 与 前端 结合 (2)
-   - [ ] 通过打包程序自动构造数据源 (1)
-   - [ ] 通过打包程序自动构造事件源 (1)
- - [ ] 开发工具
-   - [ ] 实时记录事件流，详细设计见[文档](https://docs.google.com/document/d/1Mui2n5_Ei50JwnBK8bLrAXHT_KNZQXL_69eF0z0WoQ0/edit?usp=sharing)
+   - [x] 内存泄露检测 (2)
+ - [x] 与 前端 结合 (2)
+   - [x] 通过打包程序自动构造数据源 (1)
+   - [x] 通过打包程序自动构造事件源 (1)
+ - [x] 开发工具
+   - [x] 实时记录事件流，详细设计见[文档](https://docs.google.com/document/d/1Mui2n5_Ei50JwnBK8bLrAXHT_KNZQXL_69eF0z0WoQ0/edit?usp=sharing)
  - [ ] 与 chair 结合 (8)
    - [ ] 后端基于事件的模块化 (3)
    - [ ] 前端事件与后端事件调用合流 (1)
