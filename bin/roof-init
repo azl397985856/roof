@@ -81,6 +81,7 @@ fs.readFile('../package.json', function (err, data) {
       }
       else {
         console.log("Roof installed.")
+        process.exit()
       }
     });
   }
