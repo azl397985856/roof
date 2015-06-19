@@ -72,6 +72,7 @@ fs.outputJsonSync( join( dir, "package.json"), packageInfo)
 
 
 
+
 //2. 创建 roof 目录
 console.log('Creating Roof dir...', dest);
 mkdir(dest + '/data');
