@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
 var program = require('commander');
-var install = require('spawn-npm-install')
 var path = require('path');
-var fs = require('fs');
+var fs = require('fs-extra');
 var join = path.join;
 var mkdir = require('mkdirp').sync;
 var exists = fs.existsSync;
@@ -58,6 +57,8 @@ function write(path, str) {
 console.log('create', dir);
 mkdir(dir + '/data');
 mkdir(dir + '/events');
+if (!exists('./node_modules/roof')) mkdir(dir + './node_modules/roof');
+
 
 // copy from src
 var template = read(join(__dirname, '../src/index.js'), 'utf8');
@@ -66,25 +67,26 @@ write(join(dir, '/events/index.js'), template);
 
 // 全局安装roof
 
-fs.readFile('../package.json', function (err, data) {
+fs.readFile('./package.json', function (err, data) {
   try {
     data = JSON.parse(data.toString("utf8"))
   } catch (ex) {
     ex = ex
   }
   if (!data.dependencies.roof) {
-    // data.dependencies.roof = '0.0.1';
-    // fs.writeFileSync('../package.json', JSON.stringify(data, null, 2));
-    install(['roof'], { save: true }, function(err) {
+    var roofVersion = JSON.parse(fs.readFileSync(join(__dirname, '../package.json')).toString('utf8')).version;
+    data.dependencies.roof = roofVersion;
+    fs.writeFileSync('./package.json', JSON.stringify(data, null, 2));
+    fs.copy(join(__dirname, '../../roof'), './node_modules/roof', function (err) {
       if (err) {
-        console.error("Could not install:\n" + err.message)
+        console.error(err)
+      } else {
+        console.log('success!')
       }
-      else {
-        console.log("Roof installed.")
-        process.exit()
-      }
-    });
+      process.exit()
+    }); 
   }
+
 });
 
 console.log('');
