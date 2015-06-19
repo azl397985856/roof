@@ -1,0 +1,114 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var path = require('path');
+var fs = require('fs-extra');
+var join = path.join;
+var mkdir = require('mkdirp').sync;
+var exists = fs.existsSync;
+var read = fs.readFileSync;
+
+// usage
+
+program.usage('[dir]');
+
+// options
+
+program
+  .parse(process.argv);
+
+// config
+
+var conf = {};
+
+// dest
+
+var dir = '.';
+
+// already a roof
+
+if (exists(join(dir, 'roof.json'))) {
+  console.error('current is already a roof project');
+  process.exit(1);
+} else {
+  // populate json
+  write(join(dir, '/roof.json'), createRoofJson());
+}
+
+if (!exists(join(dir, 'package.json'))) {
+  console.error('missing package.json');
+  process.exit(1);
+}
+
+/**
+ * Verbose write.
+ */
+
+function write(path, str) {
+  if (exists(path)) {
+    console.warn('exists', path);
+  } else {
+    console.log('create', path);
+    fs.writeFileSync(path, str);
+  }
+}
+
+// mkdir
+console.log('create', dir);
+mkdir(dir + '/data');
+mkdir(dir + '/events');
+if (!exists('./node_modules/roof')) mkdir(dir + './node_modules/roof');
+
+
+// copy from src
+var template = read(join(__dirname, '../src/index.js'), 'utf8');
+write(join(dir, '/data/index.js'), template);
+write(join(dir, '/events/index.js'), template);
+
+// 全局安装roof
+
+fs.readFile('./package.json', function (err, data) {
+  try {
+    data = JSON.parse(data.toString("utf8"))
+  } catch (ex) {
+    ex = ex
+  }
+  if (!data.dependencies.roof) {
+    var roofVersion = JSON.parse(fs.readFileSync(join(__dirname, '../package.json')).toString('utf8')).version;
+    data.dependencies.roof = roofVersion;
+    fs.writeFileSync('./package.json', JSON.stringify(data, null, 2));
+    fs.copy(join(__dirname, '../../roof'), './node_modules/roof', function (err) {
+      if (err) {
+        console.error(err)
+      } else {
+        console.log('success!')
+      }
+      process.exit()
+    }); 
+  }
+
+});
+
+console.log('');
+
+
+// create a roof.json
+
+function createRoofJson() {
+  var buf = '';
+
+  buf += '{\n'
+  buf += '  "dir": {\n';
+  buf += '    "data": "data",\n';
+  buf += '    "events": "events"\n';
+  buf += '  },\n'
+
+  buf += '  "modules": {\n';
+  buf += '    "data": [],\n';
+  buf += '    "events": []\n';
+  buf += '  }\n'
+
+  buf += '}\n'
+
+  return buf;
+}
