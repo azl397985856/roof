@@ -1,4 +1,4 @@
-import Bus from "roof-bus"
+import Bus from "roof-bus/lib/index.js"
 import Node from "roof-node/lib/node"
 import Nodes from "roof-node/lib/nodes"
 
