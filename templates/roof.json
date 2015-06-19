@@ -1,0 +1,10 @@
+{
+  "dir": {
+    "data": "data",
+    "events": "events"
+  },
+  "modules": {
+    "data": ["todos"],
+    "events": ["todos"]
+  }
+}

@@ -7,42 +7,9 @@ var join = path.join;
 var mkdir = require('mkdirp').sync;
 var exists = fs.existsSync;
 var read = fs.readFileSync;
+var cp = fs.copySync
 
-// usage
 
-program.usage('[dir]');
-
-// options
-
-program
-  .parse(process.argv);
-
-// config
-
-var conf = {};
-
-// dest
-
-var dir = '.';
-
-// already a roof
-
-if (exists(join(dir, 'roof.json'))) {
-  console.error('current is already a roof project');
-  process.exit(1);
-} else {
-  // populate json
-  write(join(dir, '/roof.json'), createRoofJson());
-}
-
-if (!exists(join(dir, 'package.json'))) {
-  console.error('missing package.json');
-  process.exit(1);
-}
-
-/**
- * Verbose write.
- */
 
 function write(path, str) {
   if (exists(path)) {
@@ -53,62 +20,77 @@ function write(path, str) {
   }
 }
 
-// mkdir
-console.log('create', dir);
-mkdir(dir + '/data');
-mkdir(dir + '/events');
-if (!exists('./node_modules/roof')) mkdir(dir + './node_modules/roof');
 
 
-// copy from src
-var template = read(join(__dirname, '../src/index.js'), 'utf8');
-write(join(dir, '/data/index.js'), template);
-write(join(dir, '/events/index.js'), template);
+// usage
+program.usage('[dir]');
 
-// 全局安装roof
+// options
+program
+  .parse(process.argv);
 
-fs.readFile('./package.json', function (err, data) {
-  try {
-    data = JSON.parse(data.toString("utf8"))
-  } catch (ex) {
-    ex = ex
-  }
-  if (!data.dependencies.roof) {
-    var roofVersion = JSON.parse(fs.readFileSync(join(__dirname, '../package.json')).toString('utf8')).version;
-    data.dependencies.roof = roofVersion;
-    fs.writeFileSync('./package.json', JSON.stringify(data, null, 2));
-    fs.copy(join(__dirname, '../../roof'), './node_modules/roof', function (err) {
-      if (err) {
-        console.error(err)
-      } else {
-        console.log('success!')
-      }
-      process.exit()
-    }); 
-  }
+// config
+var conf = {};
 
-});
+var dir = process.cwd()
+// destination
+var dest = path.join(dir, process.argv[2] || "./");
 
-console.log('');
+var packageInfo;
 
+// already a roof
+if (exists(join(dest, 'roof.json'))) {
+  console.error('this is already a roof project.');
+  process.exit(1);
 
-// create a roof.json
-
-function createRoofJson() {
-  var buf = '';
-
-  buf += '{\n'
-  buf += '  "dir": {\n';
-  buf += '    "data": "data",\n';
-  buf += '    "events": "events"\n';
-  buf += '  },\n'
-
-  buf += '  "modules": {\n';
-  buf += '    "data": [],\n';
-  buf += '    "events": []\n';
-  buf += '  }\n'
-
-  buf += '}\n'
-
-  return buf;
 }
+
+//check package.json
+if (!exists(join(dir, 'package.json'))) {
+  console.error('missing package.json');
+  process.exit(1);
+}else{
+  packageInfo = fs.readJSONSync("./package.json");
+  if( !packageInfo ){
+    console.error("package.json not valid.")
+  }
+  if( !packageInfo.dependencies ){
+    packageInfo.dependencies = {}
+  }
+}
+
+
+
+/**
+ * Verbose write.
+ */
+
+//1. 修改 package.json
+var roofVersion = fs.readJSONSync(join(__dirname, '../package.json')).version;
+packageInfo.dependencies.roof = roofVersion;
+fs.outputJsonSync( join( dir, "package.json"), packageInfo)
+
+
+
+//2. 创建 roof 目录
+console.log('Creating Roof dir...', dest);
+mkdir(dest + '/data');
+mkdir(dest + '/events');
+
+
+//3. 复制模板文件
+console.log('Copying Roof templates...');
+var eventIndex = read(join(__dirname, '../templates/event-index.js'), 'utf8');
+cp(join(__dirname, '../templates/data-index.js'),join(dest, '/data/index.js'));
+cp( join(__dirname, '../templates/data-todos.js'),join(dest, '/data/todos.js'));
+cp(join(__dirname, '../templates/event-index.js'),join(dest, '/events/index.js'));
+cp( join(__dirname, '../templates/event-todos.js'),join(dest, '/events/todos.js'));
+
+
+console.log('Installing Roof...');
+//4. 创建roof文件
+cp( join(__dirname,"../templates/roof.json"),join(dest,"/roof.json"))
+
+
+//5. 给当前项目安装roof
+cp(  join(__dirname,"../"),join(dir, "/node_modules/roof"))

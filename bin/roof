@@ -11,7 +11,7 @@ var exists = fs.existsSync;
 // usage
 
 program
-  .version(require('../package').version)
+  .version(require('../package.json').version)
   .usage('<command>');
 
 // sub-command help
