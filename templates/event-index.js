@@ -1,8 +1,8 @@
 'use strict';
-require('babel-core/polyfill.js');
+
+require("roof/lib/polyfill.js")
 
 import {Bus} from "roof"
-console.log( Bus)
 let modules = require('../roof.json').modules.events;
 let bus = new Bus();
 

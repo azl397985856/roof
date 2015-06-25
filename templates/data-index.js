@@ -1,6 +1,6 @@
 'use strict';
 let _ = require('lodash');
-let RoofMixin = require('roof/node_modules/roof-node/mixin/react.js');
+let RoofMixin = require('roof/lib/mixin/react.js');
 let dataNames = require('../roof.json').modules.data;
 
 
