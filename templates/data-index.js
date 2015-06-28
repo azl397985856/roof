@@ -9,19 +9,16 @@ let exportsObj = mixinFactory;
 function mixinFactory(mixinDef) {
 
   if (!exportsObj.isServerRendering) {
-    if ( Object.keys(exportsObj.source).length === 0 ) {
-      _.extend(exportsObj.source , _.zipObject(dataNames, dataNames.map(function(name) {
+    if (Object.keys(exportsObj.source).length === 0) {
+      _.extend(exportsObj.source, _.zipObject(dataNames, dataNames.map(function(name) {
         return require('./' + name)({context: context});
-      })))
-
-      console.log("setting source, ", exportsObj.source)
+      })));
     }
   }else {
     // 占位符
     exportsObj.source = {};
   }
 
-  console.log( "source", exportsObj.source )
   return new RoofMixin(exportsObj.isServerRendering ? exportsObj : exportsObj.source, mixinDef);
 }
 
@@ -43,7 +40,7 @@ exportsObj.removeData = function(key) {
   delete exportsObj._serverRenderingData[key];
 };
 
-//占位符
+//  占位符
 exportsObj.source = {};
 
 

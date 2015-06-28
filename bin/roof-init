@@ -3,6 +3,7 @@
 var program = require('commander');
 var path = require('path');
 var fs = require('fs-extra');
+var ofs = require('fs');
 var join = path.join;
 var mkdir = require('mkdirp').sync;
 var exists = fs.existsSync;
@@ -68,7 +69,7 @@ if (!exists(join(dir, 'package.json'))) {
 //1. 修改 package.json
 var roofVersion = fs.readJSONSync(join(__dirname, '../package.json')).version;
 packageInfo.dependencies.roof = roofVersion;
-fs.outputJsonSync( join( dir, "package.json"), packageInfo)
+fs.outputJsonSync( join( dir, "package.json"), packageInfo);
 
 
 
@@ -90,8 +91,12 @@ cp( join(__dirname, '../templates/event-todos.js'),join(dest, '/events/todos.js'
 
 console.log('Installing Roof...');
 //4. 创建roof文件
-cp( join(__dirname,"../templates/roof.json"),join(dest,"/roof.json"))
+cp( join(__dirname,"../templates/roof.json"),join(dest,"/roof.json"));
 
 
 //5. 给当前项目安装roof
-cp(  join(__dirname,"../"),join(dir, "/node_modules/roof"))
+if( ! ofs.existsSync(join(dir, "/node_modules/roof")) ){
+  cp(  join(__dirname,"../"),join(dir, "/node_modules/roof"));
+}
+
+console.log('roof init done');

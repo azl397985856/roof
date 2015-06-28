@@ -1,8 +1,8 @@
 'use strict';
 
-require("roof/lib/polyfill.js")
+require('roof/lib/polyfill.js');
 
-import {Bus} from "roof"
+let Bus = require('roof').Bus;
 let modules = require('../roof.json').modules.events;
 let bus = new Bus();
 
