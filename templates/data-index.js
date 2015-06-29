@@ -1,8 +1,15 @@
 'use strict';
-let _ = require('lodash');
+let assign = require('object-assign');
 let RoofMixin = require('roof/lib/mixin/react.js');
 let dataNames = require('../roof.json').modules.data;
 
+function zipObject(keys, values){
+  let output = {}
+  for(let i in keys){
+    output[keys[i]] = values[i]
+  }
+  return output
+}
 
 let exportsObj = mixinFactory;
 
@@ -10,7 +17,7 @@ function mixinFactory(mixinDef) {
 
   if (!exportsObj.isServerRendering) {
     if (Object.keys(exportsObj.source).length === 0) {
-      _.extend(exportsObj.source, _.zipObject(dataNames, dataNames.map(function(name) {
+      assign(exportsObj.source, zipObject(dataNames, dataNames.map(function(name) {
         return require('./' + name)({context: context});
       })));
     }
@@ -27,7 +34,7 @@ exportsObj._serverRenderingData = {};
 exportsObj.isServerRendering = false;
 
 exportsObj.setData = function(key, context) {
-  exportsObj._serverRenderingData[key] = _.zipObject(dataNames, dataNames.map(function(name) {
+  exportsObj._serverRenderingData[key] = zipObject(dataNames, dataNames.map(function(name) {
     return require('./' + name)({context: context});
   }));
 };
