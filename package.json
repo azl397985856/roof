@@ -9,8 +9,17 @@
   "dependencies": {
     "uuid": "~2.0.1",
     "core-js": "^0.9.18",
-    "roof-bus": "~0.0.7",
+    "roof-bus": "~0.0.8",
     "roof-node": "~0.0.11"
+  },
+  "spm": {
+    "main": "index.js",
+    "dependencies": {
+      "uuid": "~2.0.1",
+      "core-js": "^0.9.18",
+      "roof-bus": "~0.0.7",
+      "roof-node": "~0.0.11"
+    }
   },
   "devDependencies": {
     "mkdirp": "~0.5.1",
