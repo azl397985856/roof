@@ -1,11 +1,11 @@
 {
   "name": "roof",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "scripts": {
     "test": "mocha  ./test/spec/*",
     "testone": "mocha "
   },
-  "main": "./lib/index.js",
+  "main": "index.js",
   "dependencies": {
     "uuid": "~2.0.1",
     "core-js": "^0.9.18",
