@@ -22,7 +22,7 @@ Roof.Nodes.createClass = function( def, options ){
 
 function generateSyncDef( options ){
   var def = {}
-  var syncActions = loadSyncActions( [].concat(options.sync || optinos.middleware ))
+  var syncActions = loadSyncActions( [].concat(options.sync || options.middleware ))
 
   def.push = [generateSyncFns(syncActions.push),'unpushed','pushing','pushed']
   def.pull= [generateSyncFns(syncActions.pull),'unpulled','pulling','pulled']

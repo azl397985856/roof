@@ -1,4 +1,5 @@
 var Roof = require('roof')
+console.log( Roof )
 var Node = Roof.Node
 var Nodes = Roof.Nodes
 var util = require('roof-node/lib/util')

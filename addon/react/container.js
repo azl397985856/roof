@@ -28,8 +28,6 @@ Roof.createContainer = function (def) {
   //TODO 订阅数据
   var source = Roof.addon.react.container.subscribe(def.cursors)
 
-  console.log('source ===>', source)
-
   //这个时候source里的数据不一定都准备好了
   var cursorMixin = new Mixin(source, {cursors: def.cursors, source:true})
   var sourceReadyMixin = new SourceReadyMixin(source)
@@ -41,11 +39,15 @@ Roof.createContainer = function (def) {
     def.render = def.safeRender
   } else {
     def.render = function () {
+      console.log('rendering')
+
       if (!source._isReady) {
         return source._error !== null ?
           (def.errorRender ?  def.errorRender.call(this) : 'error occurred when loading data')
           : null
       }else{
+        console.log('is ready rendering', this.cursors)
+
         return _render.call(this)
       }
     }
