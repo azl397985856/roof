@@ -1,5 +1,4 @@
 var Roof = require('roof')
-console.log( Roof )
 var Node = Roof.Node
 var Nodes = Roof.Nodes
 var util = require('roof-node/lib/util')
@@ -36,7 +35,6 @@ function transform(handler) {
 
 
   originals.forEach(function (nodeOrNodes) {
-    console.log( nodeOrNodes === that)
     if (Nodes.isNodesInstance(nodeOrNodes)) {
       nodeOrNodes.onAny('change', updater)
     }

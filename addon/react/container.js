@@ -39,15 +39,12 @@ Roof.createContainer = function (def) {
     def.render = def.safeRender
   } else {
     def.render = function () {
-      console.log('rendering')
 
       if (!source._isReady) {
         return source._error !== null ?
           (def.errorRender ?  def.errorRender.call(this) : 'error occurred when loading data')
           : null
       }else{
-        console.log('is ready rendering', this.cursors)
-
         return _render.call(this)
       }
     }
@@ -56,7 +53,6 @@ Roof.createContainer = function (def) {
   return React.createClass(def)
 }
 
-console.log("attach createContainer", Roof)
 
 
 
