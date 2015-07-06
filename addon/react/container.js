@@ -26,7 +26,7 @@ function SourceReadyMixin(source) {
 
 Roof.createContainer = function (def) {
   //TODO 订阅数据
-  var source = Roof.addon.react.container.subscribe(def.cursors)
+  var source = Roof.Data.subscribe(def.cursors)
 
   //这个时候source里的数据不一定都准备好了
   var cursorMixin = new Mixin(source, {cursors: def.cursors, source:true})

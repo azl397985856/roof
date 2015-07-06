@@ -7,20 +7,7 @@ var ofs = require('fs');
 var join = path.join;
 var mkdir = require('mkdirp').sync;
 var exists = fs.existsSync;
-var read = fs.readFileSync;
 var cp = fs.copySync
-
-
-
-function write(path, str) {
-  if (exists(path)) {
-    console.warn('exists', path);
-  } else {
-    console.log('create', path);
-    fs.writeFileSync(path, str);
-  }
-}
-
 
 
 // usage
@@ -39,11 +26,11 @@ var dest = path.join(dir, process.argv[2] || "./");
 
 var packageInfo;
 
+
 // already a roof
 if (exists(join(dest, 'roof.json'))) {
   console.error('this is already a roof project.');
   process.exit(1);
-
 }
 
 //check package.json
@@ -61,41 +48,30 @@ if (!exists(join(dir, 'package.json'))) {
 }
 
 
-
-/**
- * Verbose write.
- */
-
-//1. 修改 package.json
-var roofVersion = fs.readJSONSync(join(__dirname, '../package.json')).version;
-packageInfo.dependencies.roof = roofVersion;
-fs.outputJsonSync( join( dir, "package.json"), packageInfo);
-
-
-
-
-//2. 创建 roof 目录
+//1. 创建 roof 目录
 console.log('Creating Roof dir...', dest);
 mkdir(dest + '/data');
 mkdir(dest + '/events');
 
 
-//3. 复制模板文件
+//2. 复制模板文件
 console.log('Copying Roof templates...');
-var eventIndex = read(join(__dirname, '../templates/event-index.js'), 'utf8');
 cp(join(__dirname, '../templates/data-index.js'),join(dest, '/data/index.js'));
 cp( join(__dirname, '../templates/data-todos.js'),join(dest, '/data/todos.js'));
 cp(join(__dirname, '../templates/event-index.js'),join(dest, '/events/index.js'));
 cp( join(__dirname, '../templates/event-todos.js'),join(dest, '/events/todos.js'));
 
 
-console.log('Installing Roof...');
-//4. 创建roof文件
+//3. 创建roof文件
 cp( join(__dirname,"../templates/roof.json"),join(dest,"/roof.json"));
 
 
-//5. 给当前项目安装roof
+//4. 给当前项目安装roof
 if( ! ofs.existsSync(join(dir, "/node_modules/roof")) ){
+  console.log('Installing Roof, this make take a few time...');
+  // 修改 package.json
+  packageInfo.dependencies.roof = fs.readJSONSync(join(__dirname, '../package.json')).version;
+  fs.outputJsonSync( join( dir, "package.json"), packageInfo);
   cp(  join(__dirname,"../"),join(dir, "/node_modules/roof"));
 }
 

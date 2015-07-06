@@ -2,9 +2,9 @@
 
 require('roof/lib/polyfill.js');
 
-let Bus = require('roof').Bus;
-let modules = require('../roof.json').modules.events;
-let bus = new Bus();
+var Bus = require('roof').Bus;
+var modules = require('../roof.json').modules.events;
+var bus = new Bus();
 
 modules.forEach(function(moduleName) {
   bus._module.set(moduleName);

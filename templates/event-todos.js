@@ -1,6 +1,6 @@
 'use strict';
 
-let source = require('../data').source
+var source = require('../data').source
 
 module.exports = function(bus) {
   bus.on('todo.create', function createTodo( todo ) {
