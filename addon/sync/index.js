@@ -84,7 +84,7 @@ function generateSyncFns( syncDef ){
       _promise.then(function(){
         //同步成功
         that.states.activate('sync')
-      }).catch(function(e){
+      })['catch'](function(e){
         console.warn('sync failed')
         console.error(e)
         that.states.deactivate('sync')
