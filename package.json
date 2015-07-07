@@ -1,6 +1,6 @@
 {
   "name": "roof",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "scripts": {
     "test": "mocha  ./test/spec/*",
     "testone": "mocha "
@@ -9,8 +9,8 @@
   "dependencies": {
     "uuid": "~2.0.1",
     "core-js": "^0.9.18",
-    "roof-bus": "~0.0.8",
-    "roof-node": "~0.0.11"
+    "roof-bus": "~0.0.10",
+    "roof-node": "~0.1.1"
   },
   "spm": {
     "main": "index.js",
