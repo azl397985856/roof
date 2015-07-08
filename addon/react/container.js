@@ -18,8 +18,8 @@ function SourceReadyMixin(source) {
       source.on('error', forceUpdate)
     },
     componentWillUnmount: function () {
-      source.off('ready', forceUpdate)
-      source.off('error', forceUpdate)
+      source.removeListener('ready', forceUpdate)
+      source.removeListener('error', forceUpdate)
     }
   }
 }
