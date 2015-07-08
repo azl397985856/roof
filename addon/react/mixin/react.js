@@ -122,7 +122,7 @@ function Mixin( data, def ){
     }
 
     //TODO 兼容过去的方式
-    if( typeof this[def.attach].on === 'function'){
+    if( def.source  === true && data._isReady === false){
       this[def.attach].on('ready', function(){
         attacher()
       })
