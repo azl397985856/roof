@@ -57,7 +57,6 @@ Frames.prototype.commit = function( commitName ){
   commitName = commitName || this.historyNames.length
 
   if( this.historyNames.indexOf( commitName) !== -1 ){
-    console.log(this.historyNames)
     throw new Error("commit name already exists: " + commitName)
   }
 

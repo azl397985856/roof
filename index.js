@@ -1,16 +1,27 @@
-var Bus =require("roof-bus/lib/index.js")
-var Node = require("roof-node/lib/node")
-var Nodes = require("roof-node/lib/nodes")
-var Util = require("./util/util")
+if( typeof window !== 'undefined' && window.Roof !== undefined){
 
-var Roof = {}
-Roof.Bus = Bus
-Roof.Node = Node
-Roof.Nodes = Nodes
-Roof.Util = Util
+  module.exports = window.Roof
 
-if( typeof window !== 'undefined' ){
-  window.Roof = Roof
+}else{
+
+  var Bus =require("roof-bus/lib/index.js")
+  var Node = require("roof-node/lib/node")
+  var Nodes = require("roof-node/lib/nodes")
+  var Util = require("./util/util")
+
+  var Roof = {}
+  Roof.Bus = Bus
+  Roof.Node = Node
+  Roof.Nodes = Nodes
+  Roof.Util = Util
+
+  if( typeof window !== 'undefined' ){
+    window.Roof = Roof
+  }
+
+  module.exports = Roof
 }
 
-module.exports = Roof
+
+
+

@@ -98,7 +98,7 @@ function Mixin( data, def ){
         dataRef = getRef(data, name)
       }
       if (!dataRef) {
-        console.warn("you are requiring an undefined cursor", name, JSON.stringify(data))
+        console.warn("you are requiring an undefined cursor:", name, JSON.stringify(data))
       }
       return dataRef
     })
