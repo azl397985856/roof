@@ -106,6 +106,7 @@ Roof.createContainer = function (def) {
     }
   }
 
+  debugger
   return React.createClass(def)
 }
 
