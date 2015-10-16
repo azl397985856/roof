@@ -7,10 +7,11 @@
   },
   "main": "index.js",
   "dependencies": {
-    "uuid": "~2.0.1",
     "core-js": "^0.9.18",
+    "object-assign": "~4.0.1",
     "roof-bus": "~0.0.10",
-    "roof-node": "~0.1.1"
+    "roof-node": "~0.1.1",
+    "uuid": "~2.0.1"
   },
   "spm": {
     "main": "index.js",
