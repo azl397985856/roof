@@ -74,9 +74,19 @@ function Mixin( data, def ){
   var mixinInstance = {}
   var updater
 
-  function updateComponentFromDataChange(randomKey){
-    this.setState(getStateProxy(randomKey))
-  }
+  var updateComponentFromDataChange = (function(){
+    var willUpdate = false
+    return function(randomKey, e){
+      //console.log( e)
+      if( willUpdate ) return
+
+      willUpdate = true
+      window.setTimeout(function(){
+        this.setState(getStateProxy(randomKey))
+        willUpdate = false
+      }.bind(this),0)
+    }
+  })()
 
   if( data.isServerRendering === true){
     mixinInstance.contextTypes =  {
