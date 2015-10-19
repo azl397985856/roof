@@ -5,9 +5,9 @@ if( typeof window !== 'undefined' && window.Roof !== undefined){
 }else{
 
   var Bus =require("roof-bus/lib/index.js")
-  var Node = require("roof-node/lib/node")
-  var Nodes = require("roof-node/lib/nodes")
-  var Util = require("./util/util")
+  var Node = require("roof-node/compatible/node.js")
+  var Nodes = require("roof-node/compatible/nodes.js")
+  var Util = require("./util/util.js")
 
   var Roof = {}
   Roof.Bus = Bus
