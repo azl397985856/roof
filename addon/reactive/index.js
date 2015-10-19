@@ -1,7 +1,7 @@
 var Roof = require('roof')
 var Node = Roof.Node
 var Nodes = Roof.Nodes
-var util = require('roof-node/lib/util')
+var util = require('roof-node/compatible/util')
 
 function after(obj, fnName, afterFn) {
   var _origin = obj[fnName]
