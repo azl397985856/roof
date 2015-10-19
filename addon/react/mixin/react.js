@@ -1,6 +1,7 @@
-var Node = require("roof-node/lib/node.js")
-var Nodes = require("roof-node/lib/nodes.js")
-var React = require("react")
+var Roof = require('roof')
+var Node = Roof.Node
+var Nodes = Roof.Nodes
+var React = require('react')
 
 function forEach( obj, handler ){
   for( var i in obj ){
@@ -123,9 +124,9 @@ function Mixin( data, def ){
     var attacher = function(){
       forEach( that[def.attach], function( obj ){
         if(  Node.isNodeInstance(obj)  ||  Nodes.isNodesInstance(obj) ){
-          obj.on("change",updater)
+          obj.on('change',updater)
           if( Nodes.isNodesInstance( obj )){
-            obj.onAny( "change", updater)
+            obj.onAny( 'change', updater)
           }
         }
       })
@@ -144,9 +145,9 @@ function Mixin( data, def ){
   mixinInstance.componentWillUnmount = function(){
     forEach( this[def.attach], function( obj ){
       if(  Node.isNodeInstance(obj)  ||  Nodes.isNodesInstance(obj) ){
-        obj.off("change",updater)
+        obj.off('change',updater)
         if( Nodes.isNodesInstance( obj )){
-          obj.offAny( "change", updater)
+          obj.offAny( 'change', updater)
         }
       }
     })
