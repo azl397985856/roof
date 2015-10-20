@@ -14,7 +14,7 @@ function after(obj, fnName, afterFn) {
 }
 
 
-function transform(handler, transformOnAnyChange) {
+function transform(handler) {
   var handlerResult = handler.call(this)
   var associates = Array.prototype.slice.call(arguments, 1)
   var that = this
@@ -33,7 +33,7 @@ function transform(handler, transformOnAnyChange) {
       //修改数据的 api 都是 naive 的，触发的事件 detail 必然是 active
       //所以这里认为 detail state 为 active 才是修改了数据
       //除非用户指定了 transformOnAnyChange 为 true
-      if( !transformOnAnyChange &&  detail.state !== 'active' ){
+      if( detail.state !== 'active' ){
         //console.log('detect change', detail)
         return
       }
