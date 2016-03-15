@@ -4,12 +4,7 @@
 Roof 是一个能帮助你构建高质量单页应用的前端框架，它擅长于管理应用数据和逻辑。特别适用于数据概念多、业务逻辑复杂的项目。使用 Roof 之后，应用的可维护性、可扩展性将得到大幅提升。
 
 它和具体的渲染框架无关，但是配合 React 使用的话能实现服务器端渲染等高级功能。  
-以下是常用的 Roof 资源：
-
- - [Roof 使用文档](http://si.alipay.im/roof/roof-book/)
- - [Roof Demo](http://gitlab.alipay-inc.com/roof/roof-demo/tree/master)
- - [Roof Dev Tool](http://gitlab.alipay-inc.com/roof/roof-dev-tool/tree/master)
-
+«
 
 
 ## 开发文档
